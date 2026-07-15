@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repositorio de Altas — Brosys / Vida Cámara</title>
+<style>
+* { box-sizing: border-box; }
+body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background:#f4f5f7; color:#222; }
+header { background: linear-gradient(135deg,#4FA8D8,#2E86C1); color:#fff; padding:22px 28px; }
+header h1 { margin:0; font-size:22px; }
+header p { margin:6px 0 0; opacity:.95; font-size:13px; }
+.wrap { padding:18px 24px; }
+.dashboard { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+.card { flex:1; min-width:180px; background:#fff; border-left:5px solid #4FA8D8; border-radius:8px; padding:14px 18px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.card .num { font-size:30px; font-weight:700; color:#4FA8D8; }
+.card .lbl { font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:#666; margin-top:2px; }
+#dropzone { border:2px dashed #4FA8D8; background:#EAF4FB; border-radius:10px; padding:28px; text-align:center; cursor:pointer; margin-bottom:16px; transition:.15s; }
+#dropzone:hover { background:#FFEFE7; }
+#dropzone.over { background:#D6EAF8; border-color:#2E86C1; }
+#dropzone .big { font-size:16px; font-weight:600; color:#2E86C1; }
+#dropzone .help { font-size:12px; color:#777; margin-top:6px; }
+#dzStatus { margin-top:8px; font-size:13px; font-weight:600; color:#4FA8D8; min-height:16px; }
+.toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+#search { flex:1; min-width:220px; padding:10px 12px; border:1px solid #ccc; border-radius:8px; font-size:14px; }
+button.btn { border:none; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; cursor:pointer; }
+button.solid { background:#4FA8D8; color:#fff; }
+button.solid:hover { background:#2E86C1; }
+button.outline { background:#fff; color:#4FA8D8; border:1.5px solid #4FA8D8; }
+button.outline:hover { background:#FFF0E9; }
+button.danger { background:#fff; color:#4FA8D8; border:1.5px solid #4FA8D8; }
+button.danger:hover { background:#fdecea; }
+.tablebox { overflow-x:auto; background:#fff; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+table { border-collapse:collapse; width:max-content; min-width:100%; font-size:12px; }
+thead th { position:sticky; top:0; background:#4FA8D8; color:#fff; font-weight:700; padding:9px 8px; white-space:nowrap; text-align:left; }
+tbody td { padding:7px 8px; border-bottom:1px solid #eee; white-space:nowrap; }
+tbody tr:nth-child(even) { background:#faf7f5; }
+td.warn { background:#FFF6D6; font-style:italic; color:#8a6d00; }
+button.del { background:none; border:none; cursor:pointer; font-size:14px; }
+.obs { background:#fff; border-radius:8px; padding:16px 20px; margin-top:18px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.obs h3 { color:#2E86C1; margin-top:0; }
+.obs li { margin:5px 0; font-size:13px; }
+footer { text-align:center; color:#999; font-size:12px; padding:24px; }
+#modal { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:flex-start; justify-content:center; padding:30px; z-index:50; overflow:auto; }
+#modal.show { display:flex; }
+.mcard { background:#fff; border-radius:12px; padding:22px; width:min(920px,100%); max-height:85vh; overflow:auto; }
+.mcard h2 { margin-top:0; color:#2E86C1; }
+.section-t { font-size:13px; text-transform:uppercase; letter-spacing:.5px; color:#4FA8D8; font-weight:700; margin:14px 0 6px; border-bottom:1px solid #eee; padding-bottom:4px; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.fld label { display:block; font-size:11px; color:#666; margin-bottom:3px; }
+.fld input, .fld select { width:100%; padding:7px 8px; border:1px solid #ccc; border-radius:6px; font-size:13px; }
+.mactions { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+@media(max-width:640px){ .grid{grid-template-columns:1fr;} }
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Repositorio de Altas — Carga Masiva Brosys / Vida Cámara</h1>
+  <p>Repositorio acumulativo: agrega varios formularios PDF, importa CSV/Excel y exporta la remesa. Persistencia local en el navegador.</p>
+</header>
+<div class="wrap">
+  <div class="dashboard">
+  <div class="card"><div class="num" id="stat-total">0</div><div class="lbl">Registros totales</div></div>
+  <div class="card"><div class="num" id="stat-titulares">0</div><div class="lbl">Titulares únicos</div></div>
+  <div class="card"><div class="num" id="stat-vida">0</div><div class="lbl">Pólizas Vida (T)</div></div>
+  <div class="card"><div class="num" id="stat-tc">0</div><div class="lbl">Pólizas con carga (T+C)</div></div>
+</div>
+
+  <div id="dropzone" class="hidden">
+    <div class="big">📄 Arrastra aquí los formularios PDF (o haz clic para seleccionar)</div>
+    <div class="help">El PDF se procesa localmente en tu navegador con PDF.js. Revisa y confirma los datos antes de guardar.</div>
+    <div id="dzStatus"></div>
+    <input type="file" id="pdfInput" accept="application/pdf" multiple style="display:none">
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Buscar en cualquier campo...">
+    <button id="btnTogglePdf" class="btn btn-primary">📄 Cargar PDF</button>
+      <button class="btn solid" id="btnAdd">➕ Agregar formulario</button>
+    <button class="btn outline" id="btnImport">⬆️ Importar CSV/Excel</button>
+    <input type="file" id="importInput" accept=".csv,.xlsx,.xls" style="display:none">
+    <button class="btn outline" id="btnXlsx">⬇️ Exportar Excel</button>
+    <button class="btn outline" id="btnCsv">⬇️ Exportar CSV</button>
+    <button class="btn danger" id="btnClear">🗑️ Limpiar todo</button>
+  </div>
+
+  <div class="tablebox">
+    <table id="tbl">
+      <thead><tr><th>#</th><th>Rut Titular</th><th>Nombres</th><th>Apellido Paterno</th><th>Apellido Materno</th><th>Sexo</th><th>Fecha Nacimiento</th><th>Tipo Movimiento</th><th>Telefono</th><th>Email</th><th>Poliza</th><th>Numero Grupo</th><th>Fecha Inicio</th><th>Capital</th><th>Renta</th><th>Peso</th><th>Estatura</th><th>Pre exisstencia</th><th>Sucursal</th><th>Area</th><th>Cargo</th><th>Banco</th><th>Tipo Cuenta</th><th>Numero Cuenta</th><th>Rut Carga</th><th>Nombre Carga</th><th>Apellido Paterno Carga</th><th>Apellido Materno Carga</th><th>Rol Carga</th><th>Sexo Carga</th><th>Fecha Nacimiento Carga</th><th>Fecha Inicio Vigencia Carga</th><th>Fecha Solicitud</th><th>Acciones</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="obs">
+    <h3>⚠️ Observaciones y validaciones</h3>
+    <ul><li>Naivys Torres: el banco 'MERCADO PAGO' NO existe en la hoja 'Codigos bancarios' del instructivo; se dejo en blanco. Confirmar banco valido.</li><li>Naivys Torres: Tipo de cuenta 'Cta. Vista / Cta. Rut' -> transcrito como 'Vista' (codigo 11).</li><li>Naivys / Karen: N de poliza y Fecha Inicio Vigencia (Uso Vida Camara) en blanco -> POR CONFIRMAR.</li><li>Regla aplicada: la carga (hija) NO se incluye en la poliza de Vida (solo 'T'), solo en Salud ('T+C').</li><li>Karen Pena: el campo BANCO y N de cuenta estan en blanco en el formulario (solo Transferencia / Cta. Vista). Confirmar banco y numero de cuenta.</li><li>Karen Pena: la fecha de firma se lee '26-06-20'; se interpreto como 26-06-2026, CONFIRMAR el ano.</li><li>Apellidos con N transcritos normalizados (PENA <- PEÑA) segun regla 'mayusculas sin tildes'.</li><li>RUT sin puntos ni guion: Naivys 277495910 / carga 277496089 ; Karen 189371856 / carga 251105079.</li></ul>
+  </div>
+</div>
+
+<footer>Generado el 14-07-2026 · Repositorio acumulativo — Brosys / Vida Cámara · Exportar Excel/CSV, Importar CSV/Excel y carga de PDF por arrastre.</footer>
+
+<div id="modal">
+  <div class="mcard">
+    <h2>Agregar / Revisar formulario</h2>
+    <form id="frm">
+      <div id="frmFields"></div>
+      <div class="mactions">
+        <button type="button" class="btn outline" id="btnCancel">Cancelar</button>
+        <button type="submit" class="btn solid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const COLS = ["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud"];
+const BANCOS = ["", "Banco BHIF - BBVA", "Banco BICE", "Banco Crédito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itaú (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];
+const SEED = [{"Rut Titular": "277495910", "Nombres": "NAIVYS FABIOLA", "Apellido Paterno": "TORRES", "Apellido Materno": "DE MOURAD", "Sexo": "F", "Fecha Nacimiento": "11-04-1998", "Tipo Movimiento": "T", "Telefono": "56966400252", "Email": "LOVEANDLIFENAIVYS@GMAIL.COM", "Poliza": "POR CONFIRMAR", "Numero Grupo": "1", "Fecha Inicio": "POR CONFIRMAR", "Capital": "0", "Renta": "0", "Peso": "82", "Estatura": "167", "Pre exisstencia": "No", "Sucursal": "Sin info", "Area": "Sin info", "Cargo": "OPERARIO", "Banco": "", "Tipo Cuenta": "Vista", "Numero Cuenta": "0001050406903", "Rut Carga": "", "Nombre Carga": "", "Apellido Paterno Carga": "", "Apellido Materno Carga": "", "Rol Carga": "", "Sexo Carga": "", "Fecha Nacimiento Carga": "", "Fecha Inicio Vigencia Carga": "", "Fecha Solicitud": "01-06-2026"}, {"Rut Titular": "277495910", "Nombres": "NAIVYS FABIOLA", "Apellido Paterno": "TORRES", "Apellido Materno": "DE MOURAD", "Sexo": "F", "Fecha Nacimiento": "11-04-1998", "Tipo Movimiento": "T+C", "Telefono": "56966400252", "Email": "LOVEANDLIFENAIVYS@GMAIL.COM", "Poliza": "POR CONFIRMAR", "Numero Grupo": "1", "Fecha Inicio": "POR CONFIRMAR", "Capital": "0", "Renta": "0", "Peso": "82", "Estatura": "167", "Pre exisstencia": "No", "Sucursal": "Sin info", "Area": "Sin info", "Cargo": "OPERARIO", "Banco": "", "Tipo Cuenta": "Vista", "Numero Cuenta": "0001050406903", "Rut Carga": "277496089", "Nombre Carga": "PAULA SOFIA", "Apellido Paterno Carga": "MOURAD", "Apellido Materno Carga": "TORRES", "Rol Carga": "HIJO", "Sexo Carga": "F", "Fecha Nacimiento Carga": "23-10-2012", "Fecha Inicio Vigencia Carga": "01-06-2026", "Fecha Solicitud": "01-06-2026"}, {"Rut Titular": "189371856", "Nombres": "KAREN VANESKA", "Apellido Paterno": "PENA", "Apellido Materno": "SALAS", "Sexo": "F", "Fecha Nacimiento": "04-03-1995", "Tipo Movimiento": "T", "Telefono": "56940339894", "Email": "KAROPENASALAS95@GMAIL.COM", "Poliza": "POR CONFIRMAR", "Numero Grupo": "1", "Fecha Inicio": "POR CONFIRMAR", "Capital": "0", "Renta": "0", "Peso": "78", "Estatura": "154", "Pre exisstencia": "No", "Sucursal": "Sin info", "Area": "Sin info", "Cargo": "Sin info", "Banco": "", "Tipo Cuenta": "Vista", "Numero Cuenta": "", "Rut Carga": "", "Nombre Carga": "", "Apellido Paterno Carga": "", "Apellido Materno Carga": "", "Rol Carga": "", "Sexo Carga": "", "Fecha Nacimiento Carga": "", "Fecha Inicio Vigencia Carga": "", "Fecha Solicitud": "26-06-2026"}, {"Rut Titular": "189371856", "Nombres": "KAREN VANESKA", "Apellido Paterno": "PENA", "Apellido Materno": "SALAS", "Sexo": "F", "Fecha Nacimiento": "04-03-1995", "Tipo Movimiento": "T+C", "Telefono": "56940339894", "Email": "KAROPENASALAS95@GMAIL.COM", "Poliza": "POR CONFIRMAR", "Numero Grupo": "1", "Fecha Inicio": "POR CONFIRMAR", "Capital": "0", "Renta": "0", "Peso": "78", "Estatura": "154", "Pre exisstencia": "No", "Sucursal": "Sin info", "Area": "Sin info", "Cargo": "Sin info", "Banco": "", "Tipo Cuenta": "Vista", "Numero Cuenta": "", "Rut Carga": "251105079", "Nombre Carga": "ANTONELLA IGNACIA", "Apellido Paterno Carga": "CONCHA", "Apellido Materno Carga": "PENA", "Rol Carga": "HIJO", "Sexo Carga": "F", "Fecha Nacimiento Carga": "09-09-2015", "Fecha Inicio Vigencia Carga": "POR CONFIRMAR", "Fecha Solicitud": "26-06-2026"}];
+const OBS = ["Naivys Torres: el banco 'MERCADO PAGO' NO existe en la hoja 'Codigos bancarios' del instructivo; se dejo en blanco. Confirmar banco valido.", "Naivys Torres: Tipo de cuenta 'Cta. Vista / Cta. Rut' -> transcrito como 'Vista' (codigo 11).", "Naivys / Karen: N de poliza y Fecha Inicio Vigencia (Uso Vida Camara) en blanco -> POR CONFIRMAR.", "Regla aplicada: la carga (hija) NO se incluye en la poliza de Vida (solo 'T'), solo en Salud ('T+C').", "Karen Pena: el campo BANCO y N de cuenta estan en blanco en el formulario (solo Transferencia / Cta. Vista). Confirmar banco y numero de cuenta.", "Karen Pena: la fecha de firma se lee '26-06-20'; se interpreto como 26-06-2026, CONFIRMAR el ano.", "Apellidos con N transcritos normalizados (PENA <- PEÑA) segun regla 'mayusculas sin tildes'.", "RUT sin puntos ni guion: Naivys 277495910 / carga 277496089 ; Karen 189371856 / carga 251105079."];
+let records = [];
+
+// grouping for modal
+const GROUPS = [
+ ["Datos Titular", ["Rut Titular","Nombres","Apellido Paterno","Apellido Materno","Sexo","Fecha Nacimiento","Tipo Movimiento","Telefono","Email"]],
+ ["Datos Poliza", ["Poliza","Numero Grupo","Fecha Inicio","Capital","Renta","Peso","Estatura","Pre exisstencia","Sucursal","Area","Cargo"]],
+ ["Datos Bancarios", ["Banco","Tipo Cuenta","Numero Cuenta"]],
+ ["Datos Carga", ["Rut Carga","Nombre Carga","Apellido Paterno Carga","Apellido Materno Carga","Rol Carga","Sexo Carga","Fecha Nacimiento Carga"]],
+ ["Fechas", ["Fecha Inicio Vigencia Carga","Fecha Solicitud"]]
+];
+
+function norm(s){ if(s==null) return ""; return String(s).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/Ñ/g,"N"); }
+function rutClean(s){ if(s==null) return ""; return String(s).replace(/[.\s-]/g,""); }
+function digits(s){ if(s==null) return ""; const m=String(s).match(/\d+/g); return m?m.join(""):""; }
+
+function load(){ try{ const d=localStorage.getItem("altasBrosys"); records = d?JSON.parse(d):JSON.parse(JSON.stringify(SEED)); }catch(e){ records=JSON.parse(JSON.stringify(SEED)); } }
+function save(){ localStorage.setItem("altasBrosys", JSON.stringify(records)); render(); }
+
+function renderStats(){
+  document.getElementById("stat-total").textContent = records.length;
+  const t = new Set(records.map(r=>r["Rut Titular"]).filter(Boolean));
+  document.getElementById("stat-titulares").textContent = t.size;
+  document.getElementById("stat-vida").textContent = records.filter(r=>r["Tipo Movimiento"]==="T").length;
+  document.getElementById("stat-tc").textContent = records.filter(r=>r["Tipo Movimiento"]==="T+C").length;
+}
+
+function render(){
+  const q = (document.getElementById("search").value||"").toLowerCase();
+  const tb = document.getElementById("tbody");
+  tb.innerHTML="";
+  records.forEach((r,i)=>{
+    const hay = COLS.some(c=>String(r[c]||"").toLowerCase().includes(q));
+    if(q && !hay) return;
+    const tr = document.createElement("tr");
+    let html = "<td>"+(i+1)+"</td>";
+    COLS.forEach(c=>{
+      const v = r[c]==null?"":r[c];
+      const warn = (v===""||v==="POR CONFIRMAR")?" class='warn'":"";
+      html += "<td"+warn+">"+escapeHtml(v)+"</td>";
+    });
+    html += "<td><button class='del' onclick='delRow("+i+")' title='Eliminar'>🗑</button></td>";
+    tr.innerHTML = html;
+    tb.appendChild(tr);
+  });
+  renderStats();
+}
+function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function delRow(i){ if(confirm("Eliminar este registro?")){ records.splice(i,1); save(); } }
+
+// ---- Modal ----
+function openModal(prefill){
+  prefill = prefill||{};
+  const cont = document.getElementById("frmFields");
+  cont.innerHTML="";
+  GROUPS.forEach(g=>{
+    const h=document.createElement("div"); h.className="section-t"; h.textContent=g[0]; cont.appendChild(h);
+    const grid=document.createElement("div"); grid.className="grid";
+    g[1].forEach(c=>{
+      const wrap=document.createElement("div"); wrap.className="fld";
+      const lab=document.createElement("label"); lab.textContent=c; wrap.appendChild(lab);
+      let el;
+      if(c==="Tipo Movimiento"){ el=sel(["T","T+C","C"]); }
+      else if(c==="Sexo"){ el=sel(["","F","M"]); }
+      else if(c==="Sexo Carga"){ el=sel(["","F","M"]); }
+      else if(c==="Tipo Cuenta"){ el=sel(["","Vista","Corriente"]); }
+      else if(c==="Banco"){ el=sel(BANCOS); }
+      else { el=document.createElement("input"); el.type="text"; }
+      el.dataset.col=c;
+      const val = prefill[c]!=null?prefill[c]:"";
+      el.value = val;
+      wrap.appendChild(el); grid.appendChild(wrap);
+    });
+    cont.appendChild(grid);
+  });
+  document.getElementById("modal").classList.add("show");
+}
+function sel(opts){ const s=document.createElement("select"); opts.forEach(o=>{ const op=document.createElement("option"); op.value=o; op.textContent=o||"(vacio)"; s.appendChild(op); }); return s; }
+function closeModal(){ document.getElementById("modal").classList.remove("show"); }
+
+// ---- CSV export ----
+function exportCsv(){
+  let lines=[COLS.join(";")];
+  records.forEach(r=>{ lines.push(COLS.map(c=>'"'+String(r[c]==null?"":r[c]).replace(/"/g,'""')+'"').join(";")); });
+  dl(new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}), "repositorio_altas_brosys.csv");
+}
+function dl(blob,name){ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); }
+
+// ---- SheetJS lazy ----
+function ensureXlsx(cb){
+  if(window.XLSX){ cb(); return; }
+  const s=document.createElement("script");
+  s.src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js";
+  s.onload=cb; s.onerror=()=>alert("No se pudo cargar la libreria Excel (sin conexion). Usa Exportar/Importar CSV.");
+  document.head.appendChild(s);
+}
+function exportXlsx(){
+  ensureXlsx(()=>{
+    const ws1 = XLSX.utils.json_to_sheet(records, {header:COLS});
+    const ws2 = XLSX.utils.aoa_to_sheet([["Observaciones y validaciones"]].concat(OBS.map(o=>[o])));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws1, "Altas");
+    XLSX.utils.book_append_sheet(wb, ws2, "Observaciones");
+    XLSX.writeFile(wb, "repositorio_altas_brosys.xlsx");
+  });
+}
+
+// ---- Import ----
+function handleImport(file){
+  const name=file.name.toLowerCase();
+  if(name.endsWith(".csv")){
+    const rd=new FileReader();
+    rd.onload=e=>{ try{ importRows(parseCsv(e.target.result)); }catch(err){ alert("Error al leer CSV: "+err.message); } };
+    rd.readAsText(file);
+  } else {
+    ensureXlsx(()=>{ const rd=new FileReader(); rd.onload=e=>{ try{ const wb=XLSX.read(e.target.result,{type:"array"}); const js=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""}); importRows(js); }catch(err){ alert("Error al leer Excel: "+err.message); } }; rd.readAsArrayBuffer(file); });
+  }
+}
+function parseCsv(txt){
+  const lines=txt.replace(/^\ufeff/,"").split(/\r?\n/).filter(l=>l.trim()!=="");
+  const sep = lines[0].indexOf(";")>-1?";":",";
+  const heads=lines[0].split(sep).map(h=>h.replace(/^"|"$/g,"").trim());
+  return lines.slice(1).map(l=>{ const cells=l.split(sep).map(c=>c.replace(/^"|"$/g,"")); const o={}; heads.forEach((h,i)=>o[h]=cells[i]||""); return o; });
+}
+function importRows(rows){
+  let n=0;
+  rows.forEach(row=>{
+    const o={}; COLS.forEach(c=>o[c]="");
+    Object.keys(row).forEach(k=>{
+      const key=String(k).trim().toLowerCase();
+      const match=COLS.find(c=>c.toLowerCase()===key);
+      if(match) o[match]=row[k]==null?"":String(row[k]);
+    });
+    records.push(o); n++;
+  });
+  save(); alert("Se importaron "+n+" registros.");
+}
+
+// ---- PDF ----
+function ensurePdfJs(cb){
+  if(window.pdfjsLib){ cb(); return; }
+  const s=document.createElement("script");
+  s.src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js";
+  s.onload=()=>{ try{ pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js"; }catch(e){} cb(); };
+  s.onerror=()=>alert("No se pudo cargar PDF.js (sin conexion). Ingresa el formulario manualmente.");
+  document.head.appendChild(s);
+}
+function handleFiles(files){
+  [...files].forEach(f=>{ if(f.type==="application/pdf"||f.name.toLowerCase().endsWith(".pdf")) processPDF(f); });
+}
+function getf(fields,names){ for(const n of names){ const k=Object.keys(fields).find(x=>x.trim().toLowerCase()===n.toLowerCase()); if(k && fields[k]!=null && String(fields[k]).trim()!=="") return fields[k]; } return ""; }
+function processPDF(file){
+  const st=document.getElementById("dzStatus");
+  st.textContent="Procesando "+file.name+" …";
+  ensurePdfJs(async ()=>{
+    try{
+      const buf=await file.arrayBuffer();
+      const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+      const fields={};
+      for(let p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p);
+        const anns=await page.getAnnotations();
+        anns.forEach(a=>{ if(a.fieldName){ const v = a.fieldValue!=null?a.fieldValue:(a.buttonValue||""); if(v!=="" || !(a.fieldName in fields)) fields[a.fieldName.trim()]=v; } });
+      }
+      const rec={}; COLS.forEach(c=>rec[c]="");
+      const hasFields = Object.keys(fields).length>0;
+      if(hasFields){
+        rec["Rut Titular"]=rutClean(getf(fields,["RUT_2","RUT_4","RUT"]));
+        rec["Nombres"]=norm(getf(fields,["Nombres"]));
+        rec["Apellido Paterno"]=norm(getf(fields,["Apellido Paterno"]));
+        rec["Apellido Materno"]=norm(getf(fields,["Apellido Materno"]));
+        rec["Fecha Nacimiento"]=getf(fields,["Fecha nacimiento"]);
+        const sx=norm(getf(fields,["Sexo"])); rec["Sexo"]= sx.startsWith("F")?"F":(sx.startsWith("M")?"M":"");
+        rec["Email"]=getf(fields,["Email"]);
+        rec["Telefono"]=digits(getf(fields,["Teléfono Celular","Telefono Celular"]));
+        rec["Peso"]=digits(getf(fields,["Peso Kg","Peso"]));
+        rec["Estatura"]=digits(getf(fields,["Estatura mts","Estatura"]));
+        rec["Cargo"]=norm(getf(fields,["Actividad"]))||"Sin info";
+        rec["Banco"]=norm(getf(fields,["Banco del Titular","Banco"]));
+        rec["Numero Cuenta"]=rutClean(getf(fields,["Nro Cta","Nro. Cta","Numero Cuenta"]));
+        rec["Rut Carga"]=rutClean(getf(fields,["RUTRow1"]));
+        rec["Nombre Carga"]=norm(getf(fields,["Nombre CompletoRow1"]));
+        const par=norm(getf(fields,["ParentescoRow1"])); rec["Rol Carga"]= par.includes("HIJ")?"HIJO":(par.includes("CONY")||par.includes("ESPOS")?"CONYUGE":par);
+        rec["Fecha Nacimiento Carga"]=getf(fields,["Fecha NacimientoRow1"]);
+        rec["Fecha Solicitud"]=getf(fields,["Fecha"]);
+        rec["Tipo Movimiento"]= rec["Rut Carga"]?"T+C":"T";
+        rec["Numero Grupo"]="1"; rec["Capital"]="0"; rec["Renta"]="0"; rec["Pre exisstencia"]="No";
+        rec["Sucursal"]="Sin info"; rec["Area"]="Sin info";
+        rec["Poliza"]="POR CONFIRMAR"; rec["Fecha Inicio"]="POR CONFIRMAR";
+        if(!rec["Tipo Cuenta"]) rec["Tipo Cuenta"]="Vista";
+        st.textContent="✔ "+file.name+" leído — revisa y confirma en el formulario";
+        openModal(rec);
+      } else {
+        // fallback text extraction
+        let txt="";
+        for(let p=1;p<=pdf.numPages;p++){ const page=await pdf.getPage(p); const tc=await page.getTextContent(); txt+=tc.items.map(i=>i.str).join(" ")+" "; }
+        const em=txt.match(/[\w.+-]+@[\w-]+\.[\w.-]+/); if(em) rec["Email"]=em[0];
+        const ru=txt.match(/\b\d{7,8}-?[\dkK]\b/); if(ru) rec["Rut Titular"]=rutClean(ru[0]);
+        if(!em && !ru){ st.textContent="⚠ "+file.name+": PDF escaneado, sin campos legibles"; alert("No se pudieron leer campos automáticamente del PDF (puede ser escaneado). Complete manualmente."); }
+        else { st.textContent="✔ "+file.name+" (texto) — revisa y completa el formulario"; }
+        rec["Tipo Movimiento"]="T"; rec["Numero Grupo"]="1"; rec["Poliza"]="POR CONFIRMAR"; rec["Fecha Inicio"]="POR CONFIRMAR";
+        openModal(rec);
+      }
+    }catch(err){
+      st.textContent="⚠ No se pudo leer "+file.name;
+      alert("No se pudo procesar el PDF: "+err.message+". Ingrese manualmente o use Importar CSV.");
+      openModal({});
+    }
+  });
+}
+
+// ---- wiring ----
+document.addEventListener("DOMContentLoaded", ()=>{
+  load(); render();
+  document.getElementById("search").addEventListener("input", render);
+  document.getElementById("btnAdd").addEventListener("click", ()=>openModal({}));
+  document.getElementById("btnCsv").addEventListener("click", exportCsv);
+  document.getElementById("btnXlsx").addEventListener("click", exportXlsx);
+  document.getElementById("btnClear").addEventListener("click", ()=>{ if(confirm("Borrar todo y volver a los datos de ejemplo?")){ records=JSON.parse(JSON.stringify(SEED)); save(); } });
+  document.getElementById("btnImport").addEventListener("click", ()=>document.getElementById("importInput").click());
+  document.getElementById("importInput").addEventListener("change", e=>{ if(e.target.files[0]) handleImport(e.target.files[0]); e.target.value=""; });
+
+  const dz=document.getElementById("dropzone"), pi=document.getElementById("pdfInput");
+  dz.addEventListener("click", ()=>pi.click());
+  pi.addEventListener("change", e=>{ handleFiles(e.target.files); e.target.value=""; });
+  ["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.add("over"); }));
+  ["dragleave","dragend"].forEach(ev=>dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.remove("over"); }));
+  dz.addEventListener("drop", e=>{ e.preventDefault(); dz.classList.remove("over"); handleFiles(e.dataTransfer.files); });
+
+  document.getElementById("frm").addEventListener("submit", e=>{
+    e.preventDefault();
+    const o={}; COLS.forEach(c=>o[c]="");
+    document.querySelectorAll("#frmFields [data-col]").forEach(el=>{ o[el.dataset.col]=el.value; });
+    records.push(o); save(); closeModal();
+  });
+  document.getElementById("btnCancel").addEventListener("click", closeModal);
+});
+
+  // Toggle PDF dropzone visibility
+  (function(){
+    var tbtn = document.getElementById('btnTogglePdf');
+    var dz = document.getElementById('dropzone');
+    if(tbtn && dz){
+      tbtn.addEventListener('click', function(){
+        var isHidden = dz.classList.contains('hidden') || dz.style.display === 'none';
+        if(isHidden){
+          dz.classList.remove('hidden');
+          dz.style.display = '';
+          tbtn.textContent = '✖ Ocultar carga PDF';
+          dz.scrollIntoView({behavior:'smooth', block:'center'});
+        } else {
+          dz.classList.add('hidden');
+          tbtn.textContent = '📄 Cargar PDF';
+        }
+      });
+    }
+  })();
+
+</script>
+</body>
+</html>
