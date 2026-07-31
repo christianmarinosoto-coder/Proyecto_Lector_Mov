@@ -1,210 +1,157 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SPCX Monitor emocional</title>
-  <style>
-    :root{
-      --bg1:#06111f; --bg2:#101b3a; --gold:#e7bd4f; --green:#22c55e; --blue:#60a5fa; --red:#fb7185;
-      --glass:rgba(255,255,255,.105); --line:rgba(255,255,255,.16);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; color:#fff; font-family:Inter,Arial,Helvetica,sans-serif;
-      background:radial-gradient(circle at 20% 10%,#263d82 0%,transparent 32%),
-                 radial-gradient(circle at 88% 18%,#66307e 0%,transparent 28%),
-                 linear-gradient(135deg,var(--bg1),var(--bg2));
-      overflow-x:hidden;
-    }
-    .stars,.coins{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-    .star{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.85);animation:twinkle 3s ease-in-out infinite}
-    @keyframes twinkle{0%,100%{opacity:.18;transform:scale(.75)}50%{opacity:1;transform:scale(1.35)}}
-    .coin{position:absolute;top:-60px;font-size:22px;opacity:.7;animation:fall linear infinite}
-    @keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
-    main{position:relative;z-index:1;width:min(1180px,94vw);margin:34px auto;display:grid;gap:18px}
-    .card{border:1px solid var(--line);border-radius:32px;background:var(--glass);backdrop-filter:blur(16px);box-shadow:0 24px 80px rgba(0,0,0,.42);padding:24px}
-    .hero{display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:center}
-    .faceBox{position:relative;min-height:245px;border-radius:28px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14)}
-    .pulse{position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.13);animation:pulse 2.4s infinite ease-out}
-    @keyframes pulse{from{transform:scale(.9);opacity:.8}to{transform:scale(2.3);opacity:0}}
-    .face{font-size:128px;filter:drop-shadow(0 18px 20px rgba(0,0,0,.34));animation:bounce 1.6s infinite ease-in-out}
-    @keyframes bounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-20px) rotate(4deg)}}
-    .tag{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.13);font-size:14px;color:#dbeafe}
-    h1{margin:14px 0 9px;font-size:clamp(31px,5vw,56px);line-height:1.02;letter-spacing:-1.3px}
-    .pct{font-size:clamp(42px,8vw,78px);font-weight:900;letter-spacing:-2px;margin:10px 0;color:#86efac}
-    .subtitle{font-size:18px;color:#dbeafe;line-height:1.55;margin:0;max-width:760px}
-    .controls{display:grid;grid-template-columns:170px 1fr auto;gap:10px;margin-top:18px;align-items:center}
-    input{width:100%;border:0;outline:0;padding:15px 16px;border-radius:16px;font-size:16px;background:rgba(255,255,255,.9);color:#0f172a}
-    button{border:0;border-radius:16px;padding:14px 18px;background:var(--gold);color:#111827;font-weight:900;cursor:pointer;box-shadow:0 12px 30px rgba(229,185,75,.22)}
-    .mini{font-size:13px;color:#cbd5e1;margin-top:11px;line-height:1.45}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .box{border-radius:24px;padding:20px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13)}
-    .box h2{font-size:15px;margin:0 0 10px;color:#fde68a;text-transform:uppercase;letter-spacing:.08em}
-    .box p{font-size:17px;line-height:1.55;margin:0;color:#f8fafc}
-    .quoteArea{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:stretch}
-    .tv{min-height:330px;border-radius:24px;overflow:hidden;background:#0b1220;border:1px solid rgba(255,255,255,.13)}
-    .status{display:grid;gap:13px}
-    .pill{padding:13px 15px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:15px;line-height:1.45;color:#e5e7eb}
-    .lossGlow{box-shadow:0 0 45px rgba(34,197,94,.25)}
-    .gainGlow{box-shadow:0 0 45px rgba(96,165,250,.25)}
-    @media(max-width:950px){.hero,.quoteArea{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.faceBox{min-height:190px}.face{font-size:98px}}
-  </style>
-</head>
-<body>
-  <div class="stars" id="stars"></div>
-  <div class="coins" id="coins"></div>
-  <main>
-    <section class="card hero" id="mainCard">
-      <div class="faceBox">
-        <div class="pulse"></div>
-        <div class="face" id="face">😄</div>
-      </div>
-      <div>
-        <span class="tag">📈 SPCX · monitor sin API propia</span>
-        <h1 id="title">Sigues perdiendo, pero no te rindas</h1>
-        <div class="pct" id="pct">-5.16%</div>
-        <p class="subtitle" id="summary">La cotización online se muestra abajo mediante widget externo. La carita usa el porcentaje que pongas en el campo.</p>
-        <div class="controls">
-          <input id="manualPct" type="number" step="0.01" value="-5.16" placeholder="% diario" />
-          <input id="note" type="text" value="Referencia online: revisa el widget TradingView abajo" />
-          <button onclick="actualizarDesdeInput()">Actualizar</button>
-        </div>
-        <div class="mini">Sin una API financiera autorizada, una página estática en GitHub Pages no puede leer de forma fiable el número desde TradingView/Investing para usarlo en cálculos. Por eso se muestra el widget online y el porcentaje se puede copiar/ajustar manualmente.</div>
-      </div>
-    </section>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lector.zzy</title>
+<style>
+:root{--nav:#0b1726;--nav2:#11263c;--accent:#18b7b5;--gold:#f2c14e;--bg:#f4f8fb;--line:#dbe7ee;--text:#152033;--muted:#64748b;--ok:#e8f8ef;--mid:#fff8db;--low:#fff0df;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
+.side{background:linear-gradient(180deg,var(--nav),var(--nav2));color:white;padding:22px 16px;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:10px;align-items:center;margin-bottom:22px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;color:#07111d;font-weight:900}.brand h1{font-size:22px;margin:0}.brand small{color:#9fb7c9}
+.nav{padding:11px;border-radius:12px;color:#c8d9e6;font-weight:800;margin:5px 0;cursor:pointer}.nav.on{background:#ffffff14;color:white}
+.conn{margin-top:16px;padding:12px;border:1px solid #ffffff22;border-radius:12px;font-size:12px}.conn .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#f0b1b1;margin-right:6px}.conn .dot.ok{background:#63d29b}
+.foot{position:absolute;bottom:16px;left:16px;right:16px;color:#90a8b8;font-size:11px;line-height:1.35}
+.main{padding:22px 26px;min-width:0}.top{display:flex;justify-content:space-between;gap:16px;margin-bottom:16px}.title h2{font-size:29px;margin:0}.title p{margin:6px 0 0;color:var(--muted)}.pill{height:max-content;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:white;color:var(--muted);font-weight:800}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 8px 22px #0c16200d}.num{font-size:28px;font-weight:900;color:var(--nav2)}.lbl{font-size:11px;color:var(--muted);font-weight:850}
+.toolbar{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;display:grid;grid-template-columns:minmax(220px,1fr) repeat(6,max-content);gap:8px;align-items:center;margin-bottom:12px}
+input{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+button{border:1px solid var(--line);background:white;color:var(--nav2);border-radius:12px;padding:10px 12px;font-weight:850;cursor:pointer;font-size:14px;white-space:nowrap}button.primary{background:var(--accent);border-color:var(--accent);color:#04201f}button.dark{background:var(--nav2);border-color:var(--nav2);color:white}button.danger{border-color:#f0b1b1;color:var(--danger)}
+.hidden{display:none!important}.drop{border:1.8px dashed var(--accent);background:#e9fbfb;border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;cursor:pointer}.drop.over{background:#d9f7f7}.drop h3{margin:0}
+.status{min-height:22px;margin:0 0 12px;color:var(--nav2);font-weight:850}.status.bad{color:var(--danger)}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden}.panelHead{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}.panelHead h3{margin:0}
+.baseWrap{overflow:auto;max-height:66vh}table{border-collapse:collapse;width:max-content;min-width:100%}th,td{border-bottom:1px solid var(--line);padding:9px 10px;font-size:12px;white-space:nowrap;text-align:left}th{position:sticky;top:0;background:#f7fbfd;border-bottom:2px solid var(--accent)}
+.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900;white-space:nowrap}.high{background:var(--ok);color:#17663a}.med{background:var(--mid);color:#7a5b00}.low{background:var(--low);color:#9a3412}
+.empty{padding:56px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#07111dcc;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
+.reviewPanel{background:white;width:min(1520px,96vw);height:min(900px,92vh);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 24px 70px #0008}.left{padding:18px;overflow:auto}.right{border-left:1px solid var(--line);background:#eef5f8;display:flex;flex-direction:column}
+.mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{font-size:12px;font-weight:850;color:#516273;display:block}.field input{width:100%;margin-top:4px}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.pdfbar{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;background:white}.pdfview{flex:1;border:0;width:100%;background:#eef5f8}
+.cfgCard{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;max-width:820px}.cfgCard h3{margin-top:0}.cfgRow{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px}.cfgRow input{width:100%}.help{font-size:13px;color:var(--muted);line-height:1.5}
+.tag{display:inline-block;background:#eef5f8;border:1px solid var(--line);border-radius:8px;padding:2px 7px;font-size:11px;font-weight:800;margin-left:6px}
+@media(max-width:1100px){.toolbar{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.reviewPanel{grid-template-columns:1fr}.right{min-height:420px;border-left:0;border-top:1px solid var(--line)}.grid{grid-template-columns:1fr}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.foot{display:none}.toolbar{grid-template-columns:1fr}.cards{grid-template-columns:1fr}}
+</style></head><body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><div class="logo">Z</div><div><h1>Lector.zzy</h1><small>PDF a remesa Brosys</small></div></div>
+  <div class="nav on" data-view="base">Base</div>
+  <div class="nav" data-view="config">Conexion agente</div>
+  <div class="conn"><span id="connDot" class="dot"></span><span id="connText">Sin conexion</span></div>
+  <div class="foot">Fase 2: el PDF se envia a un flujo de Power Automate que llama al agente Copilot y guarda en OneDrive.</div>
+</aside>
+<main class="main">
+  <div class="top"><div class="title"><h2>Lector.zzy</h2><p>Carga PDF, el agente lee via Power Automate y tu validas antes de exportar.</p></div><div class="pill" id="statusPill">Listo</div></div>
 
-    <section class="quoteArea">
-      <div class="card tv">
-        <div class="tradingview-widget-container" style="height:100%;width:100%">
-          <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
-          <div class="tradingview-widget-copyright" style="font-size:12px;text-align:center;padding:6px;color:#9ca3af">
-            Cotización referencial vía widget de TradingView
-          </div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-          {
-            "symbols": [["SPCX", "NASDAQ:SPCX|1D"]],
-            "chartOnly": false,
-            "width": "100%",
-            "height": "330",
-            "locale": "es",
-            "colorTheme": "dark",
-            "autosize": true,
-            "showVolume": true,
-            "showMA": false,
-            "hideDateRanges": false,
-            "hideMarketStatus": false,
-            "hideSymbolLogo": false,
-            "scalePosition": "right",
-            "scaleMode": "Normal",
-            "fontFamily": "Inter, Arial, sans-serif",
-            "fontSize": "10",
-            "noTimeScale": false,
-            "valuesTracking": "1",
-            "changeMode": "price-and-percent",
-            "chartType": "area",
-            "maLineColor": "#2962FF",
-            "maLineWidth": 1,
-            "maLength": 9,
-            "lineWidth": 2,
-            "lineType": 0,
-            "dateRanges": ["1d|1", "5d|5", "1m|30", "3m|60", "12m|1D", "all|1M"]
-          }
-          </script>
-        </div>
-      </div>
-      <section class="status">
-        <div class="box">
-          <h2>📖 Versículo para hoy</h2>
-          <p id="verse"></p>
-        </div>
-        <div class="box">
-          <h2>🔮 Mirada especulativa para mañana</h2>
-          <p id="tomorrow"></p>
-        </div>
-        <div class="box">
-          <h2>💬 Mensaje motivador</h2>
-          <p id="motivation"></p>
-        </div>
-      </section>
-    </section>
+  <section id="viewBase">
+    <div class="cards">
+      <div class="card"><div id="stTotal" class="num">0</div><div class="lbl">REGISTROS</div></div>
+      <div class="card"><div id="stTit" class="num">0</div><div class="lbl">TITULARES</div></div>
+      <div class="card"><div id="stRev" class="num">0</div><div class="lbl">REVISION</div></div>
+      <div class="card"><div id="stAvg" class="num">0%</div><div class="lbl">CONFIANZA MEDIA</div></div>
+    </div>
+    <div class="toolbar">
+      <input id="search" placeholder="Buscar RUT, nombre, email, poliza...">
+      <button id="btnTogglePdf" class="primary">Cargar PDF</button>
+      <button id="btnImport">Importar Excel/JSON</button>
+      <button id="btnXlsx" class="dark">Exportar Excel</button>
+      <button id="btnCsv">CSV</button>
+      <button id="btnClear" class="danger">Limpiar</button>
+      <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,.json" class="hidden">
+    </div>
+    <div id="dropzone" class="drop hidden"><h3>Arrastra PDF aqui o haz clic para seleccionar</h3><small class="help">Se enviaran al flujo de Power Automate configurado. Si no hay flujo, el PDF se guarda como pendiente de revision manual.</small><input id="pdfInput" type="file" accept="application/pdf" multiple class="hidden"></div>
+    <div id="statusBar" class="status"></div>
+    <section class="panel"><div class="panelHead"><h3>Base</h3><span>Formato Excel - todos los registros</span></div><div id="baseBox" class="baseWrap"><div class="empty">Carga un PDF o importa una lectura para comenzar.</div></div></section>
+  </section>
 
-    <section class="grid">
-      <div class="pill">✅ La página está lista para GitHub Pages y no necesita backend.</div>
-      <div class="pill">⚠️ El widget muestra referencia online, pero el navegador no permite leer ese dato desde el iframe para cambiar la carita automáticamente sin API.</div>
-    </section>
-  </main>
+  <section id="viewConfig" class="hidden">
+    <div class="cfgCard">
+      <h3>Conexion con el agente <span class="tag">Power Automate</span></h3>
+      <p class="help">Pega la <b>URL HTTP POST</b> del flujo de Power Automate que recibe el PDF, llama al agente de Copilot Studio y devuelve el JSON de lectura. La URL se guarda solo en este navegador (localStorage).</p>
+      <div class="cfgRow"><label class="lbl">URL del flujo (HTTP trigger)</label><input id="flowUrl" placeholder="https://prod-XX.westus.logic.azure.com:443/workflows/.../triggers/manual/paths/invoke?..."></div>
+      <div class="cfgRow"><label class="lbl">Carpeta OneDrive de bodega (informativo)</label><input id="oneFolder" placeholder="/Lector.zzy/entrada"></div>
+      <div class="actions"><button id="btnTestFlow">Probar conexion</button><button id="btnSaveFlow" class="primary">Guardar</button></div>
+      <p id="cfgMsg" class="help"></p>
+      <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+      <h3>Contrato de datos que espera Lector.zzy</h3>
+      <p class="help">El flujo debe responder un JSON con esta forma. Cada campo puede traer un valor y un score de confianza 0-100.</p>
+      <pre style="background:#0b1726;color:#cfe;padding:12px;border-radius:12px;overflow:auto;font-size:12px">{
+  "archivo_pdf": "formulario.pdf",
+  "registros": [
+    { "Rut Titular": "82179364", "Nombres": "ANGEL ERASMO",
+      "Banco": "Banco Estado", "Tipo Cuenta": "Corriente",
+      "_conf": { "Rut Titular": 95, "Nombres": 72, "Banco": 88 } }
+  ],
+  "notas": ["Poliza no informada -> POR CONFIRMAR"]
+}</pre>
+    </div>
+  </section>
+</main>
+</div>
 
-  <script>
-    const versosPerdida = [
-      { ref:'Josué 1:9', txt:'Paráfrasis: sé fuerte y valiente; no vivas desde el miedo, porque Dios te acompaña en el camino.' },
-      { ref:'Filipenses 4:6-7', txt:'Paráfrasis: no dejes que la ansiedad tome el control; presenta tus cargas a Dios y busca paz para decidir mejor.' },
-      { ref:'Salmo 46:10', txt:'Paráfrasis: detente, respira y recuerda que no todo se resuelve desde la urgencia.' },
-      { ref:'Proverbios 3:5-6', txt:'Paráfrasis: confía, ordena tus pasos y evita decidir solo por impulso.' }
-    ];
-    const versosGanancia = [
-      { ref:'Proverbios 16:18', txt:'Paráfrasis: que una buena jornada no te lleve al exceso de confianza.' },
-      { ref:'Lucas 14:28', txt:'Paráfrasis: antes de avanzar, calcula bien el camino y mantén disciplina.' },
-      { ref:'Eclesiastés 7:14', txt:'Paráfrasis: en el buen día disfruta, pero recuerda que también hay días difíciles.' }
-    ];
-    const motivacionPerdida = [
-      'Una caída diaria no define tu futuro. Respira, revisa tu estrategia y evita vender solo por pánico.',
-      'El mercado puede ser agresivo en el corto plazo. Tu ventaja está en pensar con calma y no desde la ansiedad.',
-      'Hoy puede doler, pero también puede enseñarte a gestionar riesgo, paciencia y disciplina.'
-    ];
-    const motivacionGanancia = [
-      'Que ir en positivo no te quite la prudencia. Ganar también requiere disciplina.',
-      'Si el mercado acompaña, celebra con calma y revisa si tu plan sigue teniendo sentido.',
-      'Un buen día no garantiza tendencia. Mantén objetivos claros y controla el riesgo.'
-    ];
-    const mananaPerdida = [
-      'Especulativamente, tras una caída fuerte podría aparecer un rebote técnico, pero también puede continuar la volatilidad. No es una predicción segura.',
-      'Para mañana el escenario podría moverse entre rebote y más presión vendedora. Decide con plan, no con miedo.',
-      'Si el sentimiento mejora, podría haber recuperación parcial; si siguen las ventas, la presión puede continuar.'
-    ];
-    const mananaGanancia = [
-      'Especulativamente, si el impulso continúa podría mantenerse el avance, pero también puede haber toma de ganancias.',
-      'Mañana podría seguir positivo si hay buen ánimo de mercado, aunque una corrección intradía sería normal.',
-      'Un día verde puede atraer optimismo, pero no elimina el riesgo. Lo importante es respetar tu plan.'
-    ];
-    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-    function actualizar(variacion){
-      const perdiendo = variacion < 0;
-      const main = document.getElementById('mainCard');
-      main.classList.remove('lossGlow','gainGlow');
-      main.classList.add(perdiendo?'lossGlow':'gainGlow');
-      document.getElementById('face').textContent = perdiendo ? '😄' : '😢';
-      document.getElementById('title').textContent = perdiendo ? 'Sigues perdiendo, pero no te rindas' : 'Vas ganando, pero no te emociones de más';
-      document.getElementById('pct').textContent = `${variacion.toFixed(2)}%`;
-      document.getElementById('pct').style.color = perdiendo ? '#86efac' : '#93c5fd';
-      document.getElementById('summary').textContent = perdiendo
-        ? 'El dato ingresado está en rojo: mira el widget, respira y evita reaccionar desde el miedo.'
-        : 'El dato ingresado está en verde: bien, pero recuerda que el mercado cambia rápido.';
-      const v = pick(perdiendo ? versosPerdida : versosGanancia);
-      document.getElementById('verse').textContent = `${v.ref} — ${v.txt}`;
-      document.getElementById('motivation').textContent = pick(perdiendo ? motivacionPerdida : motivacionGanancia);
-      document.getElementById('tomorrow').textContent = pick(perdiendo ? mananaPerdida : mananaGanancia);
-    }
-    function actualizarDesdeInput(){
-      const valor = parseFloat(document.getElementById('manualPct').value);
-      if(!Number.isNaN(valor)) actualizar(valor);
-    }
-    function crearFondo(){
-      const stars = document.getElementById('stars');
-      for(let i=0;i<75;i++){
-        const s=document.createElement('span'); s.className='star';
-        s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%'; s.style.animationDelay=Math.random()*3+'s';
-        stars.appendChild(s);
-      }
-      const coins = document.getElementById('coins');
-      for(let i=0;i<18;i++){
-        const c=document.createElement('span'); c.className='coin'; c.textContent=Math.random()>.5?'💸':'🪙';
-        c.style.left=Math.random()*100+'%'; c.style.animationDuration=(5+Math.random()*7)+'s'; c.style.animationDelay=Math.random()*6+'s';
-        coins.appendChild(c);
-      }
-    }
-    crearFondo();
-    actualizar(-5.16);
-  </script>
-</body>
-</html>
+<div id="reviewModal" class="modal hidden"><div class="reviewPanel">
+  <section class="left"><div class="mtop"><h3>Revision del registro</h3><button id="closeReview">Cerrar</button></div>
+    <form id="reviewForm"><div id="reviewFields" class="grid"></div><div class="actions"><button type="button" id="deleteReview" class="danger">Eliminar</button><button class="primary" type="submit">Guardar cambios</button></div></form>
+  </section>
+  <section class="right"><div class="pdfbar"><strong>PDF original</strong><span>Previsualizacion</span></div><iframe id="pdfFrame" class="pdfview"></iframe></section>
+</div></div>
+
+<script>
+const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyPhase2V1';const CFG='lectorZzyCfgV1';
+let records=[];let editingIndex=null;const $=id=>document.getElementById(id);
+function initRecord(){const r={};COLS.forEach(c=>r[c]='');r._conf={};r._needsReview=false;r._pdfData='';r._pdfName='';return r}
+function esc(s){return(s||'').toString().replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function save(){localStorage.setItem(STORAGE,JSON.stringify(records));render()}
+function load(){try{records=JSON.parse(localStorage.getItem(STORAGE)||'[]')||[]}catch(e){records=[]}}
+function getCfg(){try{return JSON.parse(localStorage.getItem(CFG)||'{}')}catch(e){return {}}}
+function setCfg(o){localStorage.setItem(CFG,JSON.stringify(o))}
+function confVal(r,c){return r._conf&&r._conf[c]!=null?Number(r._conf[c]):(r[c]?90:0)}
+function cc(n){return n>=90?'high':n>=70?'med':'low'}function badge(n){return '<span class="badge '+cc(n)+'">'+n+'%</span>'}
+function avg(r){let ks=['Rut Titular','Nombres','Email','Banco','Numero Cuenta','Poliza'];let v=ks.map(k=>confVal(r,k));return Math.round(v.reduce((a,b)=>a+b,0)/v.length)}
+function isRev(r){return r._needsReview||avg(r)<85||Object.values(r).includes('PENDIENTE')||Object.values(r).includes('POR CONFIRMAR')}
+function status(m,bad){$('statusBar').textContent=m||'';$('statusBar').classList.toggle('bad',!!bad);$('statusPill').textContent=bad?'Revisar':'Listo'}
+function fullName(r){return[r.Nombres,r['Apellido Paterno'],r['Apellido Materno']].filter(Boolean).join(' ')||'Sin nombre'}
+function setStats(){stTotal.textContent=records.length;stTit.textContent=new Set(records.map(r=>r['Rut Titular']).filter(Boolean)).size;stRev.textContent=records.filter(isRev).length;stAvg.textContent=records.length?Math.round(records.map(avg).reduce((a,b)=>a+b,0)/records.length)+'%':'0%'}
+function render(){const q=($('search').value||'').toLowerCase();if(!records.length){baseBox.innerHTML='<div class="empty">Carga un PDF o importa una lectura para comenzar.</div>';setStats();return}
+ let html='<table><thead><tr><th>Estado</th><th>Confianza</th><th>Rut</th><th>Nombre</th><th>Email</th><th>Poliza</th><th>Banco</th><th>Cuenta</th><th>Acciones</th></tr></thead><tbody>';
+ records.forEach((r,i)=>{let t=COLS.map(c=>r[c]||'').join(' ').toLowerCase();if(q&&t.indexOf(q)<0)return;let cf=avg(r);
+ html+='<tr><td>'+(isRev(r)?'<span class="badge low">Revision</span>':'<span class="badge high">Validado</span>')+'</td><td>'+badge(cf)+'</td><td>'+esc(r['Rut Titular'])+' '+badge(confVal(r,'Rut Titular'))+'</td><td>'+esc(fullName(r))+' '+badge(confVal(r,'Nombres'))+'</td><td>'+esc(r.Email)+'</td><td>'+esc(r.Poliza)+'</td><td>'+esc(r.Banco)+' '+badge(confVal(r,'Banco'))+'</td><td>'+esc(r['Numero Cuenta'])+'</td><td><button data-open="'+i+'">Revisar</button></td></tr>'});
+ baseBox.innerHTML=html+'</tbody></table>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openReview(Number(b.dataset.open)));setStats()}
+function openReview(i){editingIndex=i;let r=records[i];reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let ctl=(c==='Banco')?('<select name="'+c+'" style="width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'" style="width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px"><option></option><option>Vista</option><option>Corriente</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'" style="width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+' '+badge(confVal(r,c))+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});pdfFrame.src=r._pdfData||'about:blank';reviewModal.classList.remove('hidden')}
+closeReview.onclick=()=>reviewModal.classList.add('hidden');
+deleteReview.onclick=()=>{if(editingIndex!=null){records.splice(editingIndex,1);save();reviewModal.classList.add('hidden')}};
+reviewForm.onsubmit=e=>{e.preventDefault();let r=records[editingIndex];COLS.forEach(c=>{let el=reviewForm.elements[c];r[c]=el?el.value:'';if(r[c])r._conf[c]=100});r._needsReview=false;save();reviewModal.classList.add('hidden')};
+function loadScript(src,ok,fail){if([...document.scripts].some(s=>s.src===src))return ok();let s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail||(()=>alert('No se pudo cargar libreria externa.'));document.head.appendChild(s)}
+function ensureX(cb){window.XLSX?cb():loadScript('https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',cb,()=>alert('No se pudo cargar SheetJS'))}
+function mapObj(o){let r=initRecord();COLS.forEach(c=>{let k=Object.keys(o).find(x=>x.trim().toLowerCase()===c.toLowerCase());r[c]=k?(o[k]||'').toString():''});if(o._conf)r._conf=o._conf;else COLS.forEach(c=>{if(r[c])r._conf[c]=95});r._needsReview=Object.values(r).some(v=>v==='PENDIENTE'||v==='POR CONFIRMAR');return r}
+function toDataURL(file){return new Promise((res,rej)=>{let fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file)})}
+async function sendToFlow(file){const cfg=getCfg();const dataUrl=await toDataURL(file);
+ if(!cfg.flowUrl){let r=initRecord();r._pdfName=file.name;r._pdfData=dataUrl;r._needsReview=true;r.Area='REQUIERE REVISION HUMANA';records.push(r);save();status('Sin flujo configurado. PDF guardado como pendiente de revision manual.',true);return}
+ status('Enviando '+file.name+' al agente...');
+ try{
+  const b64=dataUrl.split(',')[1];
+  const resp=await fetch(cfg.flowUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fileName:file.name,contentType:'application/pdf',fileBase64:b64})});
+  if(!resp.ok)throw new Error('HTTP '+resp.status);
+  const data=await resp.json();
+  const arr=Array.isArray(data)?data:(data.registros||[]);
+  if(!arr.length)throw new Error('El flujo no devolvio registros');
+  arr.forEach(o=>{let r=mapObj(o);r._pdfName=file.name;r._pdfData=dataUrl;records.push(r)});
+  save();status('Lectura recibida del agente para '+file.name+'. Revisa los campos en amarillo/rojo.');
+ }catch(err){let r=initRecord();r._pdfName=file.name;r._pdfData=dataUrl;r._needsReview=true;r.Area='REQUIERE REVISION HUMANA';records.push(r);save();status('No se pudo leer con el agente ('+err.message+'). PDF guardado para revision manual.',true)}
+}
+function handlePDFs(files){[...files].filter(f=>/pdf$/i.test(f.name)).forEach(sendToFlow)}
+btnTogglePdf.onclick=()=>{dropzone.classList.toggle('hidden');btnTogglePdf.textContent=dropzone.classList.contains('hidden')?'Cargar PDF':'Ocultar carga PDF'};
+dropzone.onclick=e=>{if(e.target.id!=='pdfInput')pdfInput.click()};
+['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('over')}));
+dropzone.addEventListener('drop',e=>handlePDFs(e.dataTransfer.files));pdfInput.onchange=e=>handlePDFs(e.target.files);
+btnImport.onclick=()=>{fileInput.accept='.xlsx,.xls,.csv,.json';fileInput.click()};
+fileInput.onchange=e=>{let f=e.target.files[0];if(!f)return;if(f.name.toLowerCase().endsWith('.json')){f.text().then(t=>{let j=JSON.parse(t);let arr=Array.isArray(j)?j:(j.registros||[]);arr.forEach(o=>records.push(mapObj(o)));save()})}else{ensureX(async()=>{let wb=XLSX.read(await f.arrayBuffer());let arr=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});arr.forEach(o=>records.push(mapObj(o)));save()})}};
+btnXlsx.onclick=()=>ensureX(()=>{let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records.map(r=>{let o={};COLS.forEach(c=>o[c]=r[c]||'');return o}),{header:COLS}),'Altas');XLSX.writeFile(wb,'lector_zzy_base.xlsx')});
+btnCsv.onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(';')));let b=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='lector_zzy.csv';a.click()};
+btnClear.onclick=()=>{if(confirm('Limpiar base local?')){records=[];save()}};
+search.oninput=render;
+// nav
+document.querySelectorAll('.nav[data-view]').forEach(n=>n.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));n.classList.add('on');let v=n.dataset.view;viewBase.classList.toggle('hidden',v!=='base');viewConfig.classList.toggle('hidden',v!=='config')});
+// config
+function refreshConn(){let cfg=getCfg();let ok=!!cfg.flowUrl;connDot.classList.toggle('ok',ok);connText.textContent=ok?'Agente conectado':'Sin conexion';flowUrl.value=cfg.flowUrl||'';oneFolder.value=cfg.oneFolder||''}
+btnSaveFlow.onclick=()=>{setCfg({flowUrl:flowUrl.value.trim(),oneFolder:oneFolder.value.trim()});cfgMsg.textContent='Configuracion guardada en este navegador.';refreshConn()};
+btnTestFlow.onclick=async()=>{let u=flowUrl.value.trim();if(!u){cfgMsg.textContent='Ingresa la URL del flujo primero.';return}cfgMsg.textContent='Probando...';try{let resp=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});cfgMsg.textContent='Respuesta del flujo: HTTP '+resp.status+(resp.ok?' (OK)':'')}catch(e){cfgMsg.textContent='No se pudo contactar el flujo: '+e.message}};
+load();refreshConn();render();
+</script></body></html>
