@@ -21,7 +21,7 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
 .empty{padding:56px;text-align:center;color:var(--muted)}
 .modal{position:fixed;inset:0;background:#07111dcc;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
 .reviewPanel{background:white;width:min(1520px,96vw);height:min(900px,92vh);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 24px 70px #0008}.left{padding:18px;overflow:auto}.right{border-left:1px solid var(--line);background:#eef5f8;display:flex;flex-direction:column}
-.mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{font-size:12px;font-weight:850;color:#516273;display:block}.field input{width:100%;margin-top:4px}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{font-size:12px;font-weight:850;color:#516273;display:block}.field input,.field select{width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 .pdfbar{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;background:white}.pdfview{flex:1;border:0;width:100%;background:#eef5f8}
 .cfgCard{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;max-width:820px}.cfgCard h3{margin-top:0}.cfgRow{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px}.cfgRow input{width:100%}.help{font-size:13px;color:var(--muted);line-height:1.5}
 .tag{display:inline-block;background:#eef5f8;border:1px solid var(--line);border-radius:8px;padding:2px 7px;font-size:11px;font-weight:800;margin-left:6px}
@@ -38,7 +38,6 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
 </aside>
 <main class="main">
   <div class="top"><div class="title"><h2>Lector.zzy</h2><p>Carga PDF, el agente lee via Power Automate y tu validas antes de exportar.</p></div><div class="pill" id="statusPill">Listo</div></div>
-
   <section id="viewBase">
     <div class="cards">
       <div class="card"><div id="stTotal" class="num">0</div><div class="lbl">REGISTROS</div></div>
@@ -59,7 +58,6 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
     <div id="statusBar" class="status"></div>
     <section class="panel"><div class="panelHead"><h3>Base</h3><span>Formato Excel - todos los registros</span></div><div id="baseBox" class="baseWrap"><div class="empty">Carga un PDF o importa una lectura para comenzar.</div></div></section>
   </section>
-
   <section id="viewConfig" class="hidden">
     <div class="cfgCard">
       <h3>Conexion con el agente <span class="tag">Power Automate</span></h3>
@@ -70,7 +68,7 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
       <p id="cfgMsg" class="help"></p>
       <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
       <h3>Contrato de datos que espera Lector.zzy</h3>
-      <p class="help">El flujo debe responder un JSON con esta forma. Cada campo puede traer un valor y un score de confianza 0-100.</p>
+      <p class="help">El flujo debe responder un JSON con esta forma. Cada campo puede traer un valor y un score de confianza 0-100 en "_conf".</p>
       <pre style="background:#0b1726;color:#cfe;padding:12px;border-radius:12px;overflow:auto;font-size:12px">{
   "archivo_pdf": "formulario.pdf",
   "registros": [
@@ -84,14 +82,12 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
   </section>
 </main>
 </div>
-
 <div id="reviewModal" class="modal hidden"><div class="reviewPanel">
   <section class="left"><div class="mtop"><h3>Revision del registro</h3><button id="closeReview">Cerrar</button></div>
     <form id="reviewForm"><div id="reviewFields" class="grid"></div><div class="actions"><button type="button" id="deleteReview" class="danger">Eliminar</button><button class="primary" type="submit">Guardar cambios</button></div></form>
   </section>
   <section class="right"><div class="pdfbar"><strong>PDF original</strong><span>Previsualizacion</span></div><iframe id="pdfFrame" class="pdfview"></iframe></section>
 </div></div>
-
 <script>
 const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyPhase2V1';const CFG='lectorZzyCfgV1';
 let records=[];let editingIndex=null;const $=id=>document.getElementById(id);
@@ -113,7 +109,7 @@ function render(){const q=($('search').value||'').toLowerCase();if(!records.leng
  records.forEach((r,i)=>{let t=COLS.map(c=>r[c]||'').join(' ').toLowerCase();if(q&&t.indexOf(q)<0)return;let cf=avg(r);
  html+='<tr><td>'+(isRev(r)?'<span class="badge low">Revision</span>':'<span class="badge high">Validado</span>')+'</td><td>'+badge(cf)+'</td><td>'+esc(r['Rut Titular'])+' '+badge(confVal(r,'Rut Titular'))+'</td><td>'+esc(fullName(r))+' '+badge(confVal(r,'Nombres'))+'</td><td>'+esc(r.Email)+'</td><td>'+esc(r.Poliza)+'</td><td>'+esc(r.Banco)+' '+badge(confVal(r,'Banco'))+'</td><td>'+esc(r['Numero Cuenta'])+'</td><td><button data-open="'+i+'">Revisar</button></td></tr>'});
  baseBox.innerHTML=html+'</tbody></table>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openReview(Number(b.dataset.open)));setStats()}
-function openReview(i){editingIndex=i;let r=records[i];reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let ctl=(c==='Banco')?('<select name="'+c+'" style="width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'" style="width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px"><option></option><option>Vista</option><option>Corriente</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'" style="width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+' '+badge(confVal(r,c))+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});pdfFrame.src=r._pdfData||'about:blank';reviewModal.classList.remove('hidden')}
+function openReview(i){editingIndex=i;let r=records[i];reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let ctl=(c==='Banco')?('<select name="'+c+'">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'"><option></option><option>Vista</option><option>Corriente</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+' '+badge(confVal(r,c))+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});pdfFrame.src=r._pdfData||'about:blank';reviewModal.classList.remove('hidden')}
 closeReview.onclick=()=>reviewModal.classList.add('hidden');
 deleteReview.onclick=()=>{if(editingIndex!=null){records.splice(editingIndex,1);save();reviewModal.classList.add('hidden')}};
 reviewForm.onsubmit=e=>{e.preventDefault();let r=records[editingIndex];COLS.forEach(c=>{let el=reviewForm.elements[c];r[c]=el?el.value:'';if(r[c])r._conf[c]=100});r._needsReview=false;save();reviewModal.classList.add('hidden')};
@@ -147,9 +143,7 @@ btnXlsx.onclick=()=>ensureX(()=>{let wb=XLSX.utils.book_new();XLSX.utils.book_ap
 btnCsv.onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(';')));let b=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='lector_zzy.csv';a.click()};
 btnClear.onclick=()=>{if(confirm('Limpiar base local?')){records=[];save()}};
 search.oninput=render;
-// nav
 document.querySelectorAll('.nav[data-view]').forEach(n=>n.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));n.classList.add('on');let v=n.dataset.view;viewBase.classList.toggle('hidden',v!=='base');viewConfig.classList.toggle('hidden',v!=='config')});
-// config
 function refreshConn(){let cfg=getCfg();let ok=!!cfg.flowUrl;connDot.classList.toggle('ok',ok);connText.textContent=ok?'Agente conectado':'Sin conexion';flowUrl.value=cfg.flowUrl||'';oneFolder.value=cfg.oneFolder||''}
 btnSaveFlow.onclick=()=>{setCfg({flowUrl:flowUrl.value.trim(),oneFolder:oneFolder.value.trim()});cfgMsg.textContent='Configuracion guardada en este navegador.';refreshConn()};
 btnTestFlow.onclick=async()=>{let u=flowUrl.value.trim();if(!u){cfgMsg.textContent='Ingresa la URL del flujo primero.';return}cfgMsg.textContent='Probando...';try{let resp=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});cfgMsg.textContent='Respuesta del flujo: HTTP '+resp.status+(resp.ok?' (OK)':'')}catch(e){cfgMsg.textContent='No se pudo contactar el flujo: '+e.message}};
