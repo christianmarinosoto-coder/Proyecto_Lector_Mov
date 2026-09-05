@@ -62,7 +62,7 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
   <section id="viewConfig" class="hidden">
     <div class="cfgCard">
       <h3>Conexion con el agente <span class="tag">Power Automate</span></h3>
-      <p class="help">Pega la <b>URL HTTP POST</b> del flujo de Power Automate que recibe el PDF, llama al agente y devuelve el JSON con % de fiabilidad. Se guarda solo en este navegador.</p>
+      <p class="help">Pega la <b>URL HTTP POST</b> del flujo de Power Automate. Si el administrador ya la dejo incrustada, esta lista para todos.</p>
       <div class="cfgRow"><label class="lbl">URL del flujo (HTTP trigger)</label><input id="flowUrl" placeholder="https://prod-XX.logic.azure.com:443/workflows/.../triggers/manual/paths/invoke?..."></div>
       <div class="cfgRow"><label class="lbl">Umbral de fiabilidad para revision manual (%)</label><input id="thr" type="number" min="0" max="100" value="70"></div>
       <div class="actions"><button id="btnTestFlow">Probar conexion</button><button id="btnSaveFlow" class="primary">Guardar</button></div>
@@ -79,6 +79,15 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
   <section class="right"><div class="pdfbar"><strong>PDF original</strong><span>Previsualizacion</span></div><iframe id="pdfFrame" class="pdfview"></iframe></section>
 </div></div>
 <script>
+/* ============================================================
+   CONFIGURACIÓN MULTIUSUARIO
+   Para dejarlo listo para todos, pega aquí la URL del flujo de
+   Power Automate entre las comillas. Ejemplo:
+   const FLOW_URL_DEFAULT = "https://prod-XX.logic.azure.com:443/workflows/....";
+   Si lo dejas vacío, cada usuario deberá pegar la URL en "Conexion agente".
+   ============================================================ */
+const FLOW_URL_DEFAULT = "";
+
 const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud", "DB"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyV3';const CFG='lectorZzyCfgV3';
 let records=[];let editingIndex=null;const $=id=>document.getElementById(id);
 function initRecord(){const r={};COLS.forEach(c=>r[c]='');r._conf={};r._pdfData='';r._pdfName='';return r}
@@ -87,6 +96,7 @@ function save(){localStorage.setItem(STORAGE,JSON.stringify(records));render()}
 function load(){try{records=JSON.parse(localStorage.getItem(STORAGE)||'[]')||[]}catch(e){records=[]}}
 function getCfg(){try{return JSON.parse(localStorage.getItem(CFG)||'{}')}catch(e){return {}}}
 function setCfg(o){localStorage.setItem(CFG,JSON.stringify(o))}
+function activeFlowUrl(){let c=getCfg();return (c.flowUrl && c.flowUrl.trim()) ? c.flowUrl.trim() : (FLOW_URL_DEFAULT||'').trim()}
 function thr(){let c=getCfg();return c.thr!=null?Number(c.thr):70}
 function confVal(r,c){return r._conf&&r._conf[c]!=null?Number(r._conf[c]):(r[c]?90:0)}
 function cc(n){return n>=90?'high':n>=thr()?'med':'low'}
@@ -110,11 +120,11 @@ function loadScript(src,ok,fail){if([...document.scripts].some(s=>s.src===src))r
 function ensureX(cb){window.XLSX?cb():loadScript('https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',cb,()=>alert('No se pudo cargar SheetJS'))}
 function mapObj(o){let r=initRecord();COLS.forEach(c=>{let k=Object.keys(o).find(x=>x.trim().toLowerCase()===c.toLowerCase());r[c]=k?(o[k]||'').toString():''});if(o._conf)r._conf=o._conf;else COLS.forEach(c=>{if(r[c])r._conf[c]=95});return r}
 function toDataURL(file){return new Promise((res,rej)=>{let fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file)})}
-async function sendToFlow(file){const cfg=getCfg();const dataUrl=await toDataURL(file);
- if(!cfg.flowUrl){let r=initRecord();r._pdfName=file.name;r._pdfData=dataUrl;records.push(r);save();status('Sin flujo configurado. PDF guardado como pendiente de revision manual.',true);return}
+async function sendToFlow(file){const url=activeFlowUrl();const dataUrl=await toDataURL(file);
+ if(!url){let r=initRecord();r._pdfName=file.name;r._pdfData=dataUrl;records.push(r);save();status('Sin flujo configurado. PDF guardado como pendiente de revision manual.',true);return}
  status('Enviando '+file.name+' al agente...');
  try{const b64=dataUrl.split(',')[1];
-  const resp=await fetch(cfg.flowUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fileName:file.name,contentType:'application/pdf',fileBase64:b64})});
+  const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fileName:file.name,contentType:'application/pdf',fileBase64:b64})});
   if(!resp.ok)throw new Error('HTTP '+resp.status);
   const data=await resp.json();const arr=Array.isArray(data)?data:(data.registros||[]);
   if(!arr.length)throw new Error('El flujo no devolvio registros');
@@ -135,9 +145,9 @@ btnCsv.onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=
 btnClear.onclick=()=>{if(confirm('Limpiar base local?')){records=[];save()}};
 search.oninput=render;
 document.querySelectorAll('.nav[data-view]').forEach(n=>n.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));n.classList.add('on');let v=n.dataset.view;viewBase.classList.toggle('hidden',v!=='base');viewConfig.classList.toggle('hidden',v!=='config')});
-function refreshConn(){let cfg=getCfg();let ok=!!cfg.flowUrl;connDot.classList.toggle('ok',ok);connText.textContent=ok?'Agente conectado':'Sin conexion';flowUrl.value=cfg.flowUrl||'';thr_el.value=cfg.thr!=null?cfg.thr:70}
+function refreshConn(){let url=activeFlowUrl();let ok=!!url;connDot.classList.toggle('ok',ok);connText.textContent=ok?'Agente conectado':'Sin conexion';let c=getCfg();flowUrl.value=c.flowUrl||FLOW_URL_DEFAULT||'';thr_el.value=c.thr!=null?c.thr:70}
 const thr_el=$('thr');
 btnSaveFlow.onclick=()=>{setCfg({flowUrl:flowUrl.value.trim(),thr:Number(thr_el.value)||70});cfgMsg.textContent='Configuracion guardada en este navegador.';refreshConn();render()};
-btnTestFlow.onclick=async()=>{let u=flowUrl.value.trim();if(!u){cfgMsg.textContent='Ingresa la URL del flujo primero.';return}cfgMsg.textContent='Probando...';try{let resp=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});cfgMsg.textContent='Respuesta del flujo: HTTP '+resp.status+(resp.ok?' (OK)':'')}catch(e){cfgMsg.textContent='No se pudo contactar el flujo: '+e.message}};
+btnTestFlow.onclick=async()=>{let u=flowUrl.value.trim()||FLOW_URL_DEFAULT;if(!u){cfgMsg.textContent='Ingresa la URL del flujo primero.';return}cfgMsg.textContent='Probando...';try{let resp=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});cfgMsg.textContent='Respuesta del flujo: HTTP '+resp.status+(resp.ok?' (OK)':'')}catch(e){cfgMsg.textContent='No se pudo contactar el flujo: '+e.message}};
 load();refreshConn();render();
 </script></body></html>
