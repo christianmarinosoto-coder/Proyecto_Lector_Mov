@@ -6,26 +6,26 @@
 .side{background:linear-gradient(180deg,var(--nav),var(--nav2));color:white;padding:22px 16px;position:sticky;top:0;height:100vh}
 .brand{display:flex;gap:10px;align-items:center;margin-bottom:22px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;color:#07111d;font-weight:900}.brand h1{font-size:22px;margin:0}.brand small{color:#9fb7c9}
 .nav{padding:11px;border-radius:12px;color:#c8d9e6;font-weight:800;margin:5px 0;cursor:pointer}.nav.on{background:#ffffff14;color:white}
-.conn{margin-top:16px;padding:12px;border:1px solid #ffffff22;border-radius:12px;font-size:12px}.conn .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#f0b1b1;margin-right:6px}.conn .dot.ok{background:#63d29b}
+.conn{margin-top:16px;padding:12px;border:1px solid #ffffff22;border-radius:12px;font-size:12px}.conn .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#63d29b;margin-right:6px}
 .foot{position:absolute;bottom:16px;left:16px;right:16px;color:#90a8b8;font-size:11px;line-height:1.35}
 .main{padding:22px 26px;min-width:0}.top{display:flex;justify-content:space-between;gap:16px;margin-bottom:16px}.title h2{font-size:29px;margin:0}.title p{margin:6px 0 0;color:var(--muted)}.pill{height:max-content;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:white;color:var(--muted);font-weight:800}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 8px 22px #0c16200d}.num{font-size:28px;font-weight:900;color:var(--nav2)}.lbl{font-size:11px;color:var(--muted);font-weight:850}
-.toolbar{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;display:grid;grid-template-columns:minmax(220px,1fr) repeat(6,max-content);gap:8px;align-items:center;margin-bottom:12px}
+.toolbar{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;display:grid;grid-template-columns:minmax(200px,1fr) repeat(7,max-content);gap:8px;align-items:center;margin-bottom:12px}
 input{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
-button{border:1px solid var(--line);background:white;color:var(--nav2);border-radius:12px;padding:10px 12px;font-weight:850;cursor:pointer;font-size:14px;white-space:nowrap}button.primary{background:var(--accent);border-color:var(--accent);color:#04201f}button.dark{background:var(--nav2);border-color:var(--nav2);color:white}button.danger{border-color:#f0b1b1;color:var(--danger)}
-.hidden{display:none!important}.drop{border:1.8px dashed var(--accent);background:#e9fbfb;border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;cursor:pointer}.drop.over{background:#d9f7f7}.drop h3{margin:0}
+button{border:1px solid var(--line);background:white;color:var(--nav2);border-radius:12px;padding:10px 12px;font-weight:850;cursor:pointer;font-size:14px;white-space:nowrap}button.primary{background:var(--accent);border-color:var(--accent);color:#04201f}button.dark{background:var(--nav2);border-color:var(--nav2);color:white}button.danger{border-color:#f0b1b1;color:var(--danger)}button.gold{background:var(--gold);border-color:var(--gold);color:#3b2d04}
+.hidden{display:none!important}
 .status{min-height:22px;margin:0 0 12px;color:var(--nav2);font-weight:850}.status.bad{color:var(--danger)}
 .panel{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden}.panelHead{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}.panelHead h3{margin:0}
-.baseWrap{overflow:auto;max-height:66vh}table{border-collapse:collapse;width:max-content;min-width:100%}th,td{border-bottom:1px solid var(--line);padding:9px 10px;font-size:12px;white-space:nowrap;text-align:left}th{position:sticky;top:0;background:#f7fbfd;border-bottom:2px solid var(--accent)}
-.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900;white-space:nowrap}.high{background:var(--ok);color:#17663a}.med{background:var(--mid);color:#7a5b00}.low{background:var(--low);color:#9a3412}
+.baseWrap{overflow:auto;max-height:64vh}table{border-collapse:collapse;width:max-content;min-width:100%}th,td{border-bottom:1px solid var(--line);padding:9px 10px;font-size:12px;white-space:nowrap;text-align:left}th{position:sticky;top:0;background:#f7fbfd;border-bottom:2px solid var(--accent)}
+.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900;white-space:nowrap}.high{background:var(--ok);color:#17663a}.med{background:var(--mid);color:#7a5b00}.low{background:var(--low);color:#9a3412}.file{background:#eef2f8;color:#3b4a5c}
 .empty{padding:56px;text-align:center;color:var(--muted)}
 .modal{position:fixed;inset:0;background:#07111dcc;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
-.reviewPanel{background:white;width:min(1520px,96vw);height:min(900px,92vh);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 24px 70px #0008}.left{padding:18px;overflow:auto}.right{border-left:1px solid var(--line);background:#eef5f8;display:flex;flex-direction:column}
+.reviewPanel{background:white;width:min(1560px,97vw);height:min(920px,93vh);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 24px 70px #0008}.left{padding:18px;overflow:auto}.right{border-left:1px solid var(--line);background:#eef5f8;display:flex;flex-direction:column}
 .mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{font-size:12px;font-weight:850;color:#516273;display:block}.field input,.field select{width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px}.field.needfix input,.field.needfix select{border-color:#e6a4a4;background:#fff6f6}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 .legend{font-size:12px;color:var(--muted);margin:6px 0 12px}
-.pdfbar{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;background:white}.pdfview{flex:1;border:0;width:100%;background:#eef5f8}
-.cfgCard{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;max-width:820px}.cfgCard h3{margin-top:0}.cfgRow{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px}.cfgRow input{width:100%}.help{font-size:13px;color:var(--muted);line-height:1.5}
-.tag{display:inline-block;background:#eef5f8;border:1px solid var(--line);border-radius:8px;padding:2px 7px;font-size:11px;font-weight:800;margin-left:6px}
+.pdfbar{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;background:white}.pdfview{flex:1;border:0;width:100%;background:#eef5f8}.nopdf{margin:auto;color:var(--muted);text-align:center;padding:20px}
+.cfgCard{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;max-width:820px}.cfgCard h3{margin-top:0}.help{font-size:13px;color:var(--muted);line-height:1.5}
+.steps{background:#fffdf5;border:1px solid #f0e2b8;border-radius:14px;padding:12px 16px;margin-bottom:12px;font-size:13px;color:#5b4a12}.steps b{color:#3b2d04}
 @media(max-width:1100px){.toolbar{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.reviewPanel{grid-template-columns:1fr}.right{min-height:420px;border-left:0;border-top:1px solid var(--line)}.grid{grid-template-columns:1fr}}
 @media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.foot{display:none}.toolbar{grid-template-columns:1fr}.cards{grid-template-columns:1fr}}
 </style></head><body>
@@ -33,13 +33,14 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
 <aside class="side">
   <div class="brand"><div class="logo">Z</div><div><h1>Lector.zzy</h1><small>PDF a remesa Brosys</small></div></div>
   <div class="nav on" data-view="base">Base</div>
-  <div class="nav" data-view="config">Conexion agente</div>
-  <div class="conn"><span id="connDot" class="dot"></span><span id="connText">Sin conexion</span></div>
-  <div class="foot">El agente lee el PDF. Solo los campos con fiabilidad menor a 70% se marcan para completar manualmente.</div>
+  <div class="nav" data-view="config">Ayuda / Flujo</div>
+  <div class="conn"><span class="dot"></span><span>Modo agente + PDF</span></div>
+  <div class="foot">Importa la lectura del agente, adjunta los PDF y completa lo que quede bajo 70% mirando el documento.</div>
 </aside>
 <main class="main">
-  <div class="top"><div class="title"><h2>Lector.zzy</h2><p>El agente lee via Power Automate. Tu solo completas lo que quede bajo 70% de fiabilidad.</p></div><div class="pill" id="statusPill">Listo</div></div>
+  <div class="top"><div class="title"><h2>Lector.zzy</h2><p>Importa la lectura del agente, adjunta los PDF y valida lo que quede bajo 70% de fiabilidad.</p></div><div class="pill" id="statusPill">Listo</div></div>
   <section id="viewBase">
+    <div class="steps">Flujo: <b>1)</b> Importa el Excel/JSON del agente &nbsp; <b>2)</b> Adjunta los PDF (para verlos al revisar) &nbsp; <b>3)</b> Revisa lo rojo (&lt;70%) usando la columna "Archivo Origen" &nbsp; <b>4)</b> Exporta el Excel Brosys.</div>
     <div class="cards">
       <div class="card"><div id="stTotal" class="num">0</div><div class="lbl">REGISTROS</div></div>
       <div class="card"><div id="stTit" class="num">0</div><div class="lbl">TITULARES</div></div>
@@ -47,107 +48,92 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
       <div class="card"><div id="stAvg" class="num">0%</div><div class="lbl">CONFIANZA MEDIA</div></div>
     </div>
     <div class="toolbar">
-      <input id="search" placeholder="Buscar RUT, nombre, email, poliza...">
-      <button id="btnTogglePdf" class="primary">Cargar PDF</button>
-      <button id="btnImport">Importar Excel/JSON</button>
+      <input id="search" placeholder="Buscar RUT, nombre, archivo, poliza...">
+      <button id="btnImport" class="primary">1. Importar Excel/JSON</button>
+      <button id="btnAttach" class="gold">2. Adjuntar PDF</button>
+      <button id="btnAdd">Agregar manual</button>
       <button id="btnXlsx" class="dark">Exportar Excel</button>
       <button id="btnCsv">CSV</button>
       <button id="btnClear" class="danger">Limpiar</button>
       <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,.json" class="hidden">
+      <input id="pdfInput" type="file" accept="application/pdf" multiple class="hidden">
     </div>
-    <div id="dropzone" class="drop hidden"><h3>Arrastra PDF aqui o haz clic para seleccionar</h3><small class="help">Se envian al flujo de Power Automate que llama al agente. Si no hay flujo, el PDF se guarda como pendiente de revision manual.</small><input id="pdfInput" type="file" accept="application/pdf" multiple class="hidden"></div>
     <div id="statusBar" class="status"></div>
-    <section class="panel"><div class="panelHead"><h3>Base</h3><span>Formato Excel - titulares y cargas</span></div><div id="baseBox" class="baseWrap"><div class="empty">Carga un PDF o importa una lectura para comenzar.</div></div></section>
+    <section class="panel"><div class="panelHead"><h3>Base</h3><span>Formato Excel - titulares y cargas</span></div><div id="baseBox" class="baseWrap"><div class="empty">Importa el Excel/JSON del agente para comenzar. Luego adjunta los PDF.</div></div></section>
   </section>
   <section id="viewConfig" class="hidden">
     <div class="cfgCard">
-      <h3>Conexion con el agente <span class="tag">Power Automate</span></h3>
-      <p class="help">Pega la <b>URL HTTP POST</b> del flujo de Power Automate. Si el administrador ya la dejo incrustada, esta lista para todos.</p>
-      <div class="cfgRow"><label class="lbl">URL del flujo (HTTP trigger)</label><input id="flowUrl" placeholder="https://prod-XX.logic.azure.com:443/workflows/.../triggers/manual/paths/invoke?..."></div>
-      <div class="cfgRow"><label class="lbl">Umbral de fiabilidad para revision manual (%)</label><input id="thr" type="number" min="0" max="100" value="70"></div>
-      <div class="actions"><button id="btnTestFlow">Probar conexion</button><button id="btnSaveFlow" class="primary">Guardar</button></div>
-      <p id="cfgMsg" class="help"></p>
+      <h3>Como usar Lector.zzy <span style="font-size:12px;color:#64748b">sin Power Automate</span></h3>
+      <p class="help"><b>1) Importar.</b> En tu agente carga los PDF y pide el resultado en Excel o JSON. Aqui pulsa "1. Importar Excel/JSON". La base se llena con datos, % de fiabilidad y la columna "Archivo Origen".</p>
+      <p class="help"><b>2) Adjuntar PDF.</b> Pulsa "2. Adjuntar PDF" y selecciona los mismos PDF. Se unen por nombre de archivo (usa "Archivo Origen").</p>
+      <p class="help"><b>3) Revisar.</b> Los campos bajo 70% salen en rojo. La columna "Archivo Origen" te dice cual PDF abrir. Pulsa "Revisar": formulario a la izquierda, PDF a la derecha.</p>
+      <p class="help"><b>4) Exportar.</b> Pulsa "Exportar Excel" para la remesa Altas Brosys (columnas + Fiabilidad %).</p>
     </div>
   </section>
 </main>
 </div>
 <div id="reviewModal" class="modal hidden"><div class="reviewPanel">
   <section class="left"><div class="mtop"><h3>Revision del registro</h3><button id="closeReview">Cerrar</button></div>
-    <div class="legend">Campos en <b style="color:#b42318">rojo</b> = fiabilidad bajo el umbral, requieren tu revision.</div>
+    <div class="legend">Campos en <b style="color:#b42318">rojo</b> = fiabilidad bajo el umbral. Archivo de origen: <b id="revFile">-</b></div>
     <form id="reviewForm"><div id="reviewFields" class="grid"></div><div class="actions"><button type="button" id="deleteReview" class="danger">Eliminar</button><button class="primary" type="submit">Guardar cambios</button></div></form>
   </section>
-  <section class="right"><div class="pdfbar"><strong>PDF original</strong><span>Previsualizacion</span></div><iframe id="pdfFrame" class="pdfview"></iframe></section>
+  <section class="right"><div class="pdfbar"><strong>PDF original</strong><span id="pdfName">Previsualizacion</span></div><iframe id="pdfFrame" class="pdfview"></iframe><div id="noPdf" class="nopdf hidden">Este registro no tiene PDF adjunto. Usa "2. Adjuntar PDF" con el archivo indicado en Archivo Origen.</div></section>
 </div></div>
 <script>
-/* ============================================================
-   CONFIGURACIÓN MULTIUSUARIO
-   Para dejarlo listo para todos, pega aquí la URL del flujo de
-   Power Automate entre las comillas. Ejemplo:
-   const FLOW_URL_DEFAULT = "https://prod-XX.logic.azure.com:443/workflows/....";
-   Si lo dejas vacío, cada usuario deberá pegar la URL en "Conexion agente".
-   ============================================================ */
-const FLOW_URL_DEFAULT = "";
-
-const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud", "DB"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyV3';const CFG='lectorZzyCfgV3';
+const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud", "DB", "Archivo Origen"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyV5';const CFG='lectorZzyCfgV5';
 let records=[];let editingIndex=null;const $=id=>document.getElementById(id);
 function initRecord(){const r={};COLS.forEach(c=>r[c]='');r._conf={};r._pdfData='';r._pdfName='';return r}
 function esc(s){return(s||'').toString().replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
 function save(){localStorage.setItem(STORAGE,JSON.stringify(records));render()}
 function load(){try{records=JSON.parse(localStorage.getItem(STORAGE)||'[]')||[]}catch(e){records=[]}}
 function getCfg(){try{return JSON.parse(localStorage.getItem(CFG)||'{}')}catch(e){return {}}}
-function setCfg(o){localStorage.setItem(CFG,JSON.stringify(o))}
-function activeFlowUrl(){let c=getCfg();return (c.flowUrl && c.flowUrl.trim()) ? c.flowUrl.trim() : (FLOW_URL_DEFAULT||'').trim()}
 function thr(){let c=getCfg();return c.thr!=null?Number(c.thr):70}
-function confVal(r,c){return r._conf&&r._conf[c]!=null?Number(r._conf[c]):(r[c]?90:0)}
+function confVal(r,c){if(c==='Archivo Origen')return r[c]?100:0;return r._conf&&r._conf[c]!=null?Number(r._conf[c]):(r[c]?90:0)}
 function cc(n){return n>=90?'high':n>=thr()?'med':'low'}
 function badge(n){return '<span class="badge '+cc(n)+'">'+n+'%</span>'}
 function avg(r){let ks=['Rut Titular','Nombres','Email','Banco','Numero Cuenta','Poliza'];let v=ks.map(k=>confVal(r,k));return Math.round(v.reduce((a,b)=>a+b,0)/v.length)}
-function lowFields(r){return COLS.filter(c=>confVal(r,c)<thr())}
+function lowFields(r){return COLS.filter(c=>c!=='Archivo Origen'&&confVal(r,c)<thr())}
 function needsFix(r){return lowFields(r).length>0}
 function status(m,bad){$('statusBar').textContent=m||'';$('statusBar').classList.toggle('bad',!!bad);$('statusPill').textContent=bad?'Revisar':'Listo'}
 function fullName(r){return[r.Nombres,r['Apellido Paterno'],r['Apellido Materno']].filter(Boolean).join(' ')||'Sin nombre'}
+function fileOf(r){return r['Archivo Origen']||r._pdfName||''}
+function norm(s){return (s||'').toString().toLowerCase().replace(/\.pdf$/,'').replace(/[^a-z0-9]/g,'')}
 function setStats(){stTotal.textContent=records.length;stTit.textContent=new Set(records.map(r=>r['Rut Titular']).filter(Boolean)).size;stRev.textContent=records.filter(needsFix).length;stAvg.textContent=records.length?Math.round(records.map(avg).reduce((a,b)=>a+b,0)/records.length)+'%':'0%'}
-function render(){const q=($('search').value||'').toLowerCase();if(!records.length){baseBox.innerHTML='<div class="empty">Carga un PDF o importa una lectura para comenzar.</div>';setStats();return}
- let html='<table><thead><tr><th>Estado</th><th>Confianza</th><th>Campos a ajustar</th><th>Rut</th><th>Nombre</th><th>Tipo</th><th>Poliza</th><th>Banco</th><th>Acciones</th></tr></thead><tbody>';
- records.forEach((r,i)=>{let t=COLS.map(c=>r[c]||'').join(' ').toLowerCase();if(q&&t.indexOf(q)<0)return;let cf=avg(r);let nf=lowFields(r).length;
- html+='<tr><td>'+(needsFix(r)?'<span class="badge low">Ajustar</span>':'<span class="badge high">Validado</span>')+'</td><td>'+badge(cf)+'</td><td>'+(nf?('<span class="badge low">'+nf+' campos</span>'):'<span class="badge high">OK</span>')+'</td><td>'+esc(r['Rut Titular'])+' '+badge(confVal(r,'Rut Titular'))+'</td><td>'+esc(fullName(r))+' '+badge(confVal(r,'Nombres'))+'</td><td>'+esc(r['Tipo Movimiento'])+'</td><td>'+esc(r.Poliza)+'</td><td>'+esc(r.Banco)+' '+badge(confVal(r,'Banco'))+'</td><td><button data-open="'+i+'">Revisar</button></td></tr>'});
+function render(){const q=($('search').value||'').toLowerCase();if(!records.length){baseBox.innerHTML='<div class="empty">Importa el Excel/JSON del agente para comenzar. Luego adjunta los PDF.</div>';setStats();return}
+ let html='<table><thead><tr><th>Estado</th><th>Confianza</th><th>Archivo Origen</th><th>PDF</th><th>Campos a ajustar</th><th>Rut</th><th>Nombre</th><th>Tipo</th><th>Banco</th><th>Acciones</th></tr></thead><tbody>';
+ records.forEach((r,i)=>{let t=(COLS.map(c=>r[c]||'').join(' ')+' '+(r._pdfName||'')).toLowerCase();if(q&&t.indexOf(q)<0)return;let cf=avg(r);let nf=lowFields(r).length;
+ html+='<tr><td>'+(needsFix(r)?'<span class="badge low">Ajustar</span>':'<span class="badge high">Validado</span>')+'</td><td>'+badge(cf)+'</td><td>'+(fileOf(r)?'<span class="badge file">'+esc(fileOf(r))+'</span>':'<span class="badge low">sin archivo</span>')+'</td><td>'+(r._pdfData?'<span class="badge high">PDF</span>':'<span class="badge low">Sin PDF</span>')+'</td><td>'+(nf?('<span class="badge low">'+nf+' campos</span>'):'<span class="badge high">OK</span>')+'</td><td>'+esc(r['Rut Titular'])+' '+badge(confVal(r,'Rut Titular'))+'</td><td>'+esc(fullName(r))+' '+badge(confVal(r,'Nombres'))+'</td><td>'+esc(r['Tipo Movimiento'])+'</td><td>'+esc(r.Banco)+' '+badge(confVal(r,'Banco'))+'</td><td><button data-open="'+i+'">Revisar</button></td></tr>'});
  baseBox.innerHTML=html+'</tbody></table>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openReview(Number(b.dataset.open)));setStats()}
-function openReview(i){editingIndex=i;let r=records[i];reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let low=confVal(r,c)<thr();if(low)d.classList.add('needfix');let ctl=(c==='Banco')?('<select name="'+c+'">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'"><option></option><option>CUENTA VISTA</option><option>CUENTA CORRIENTE</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+' '+badge(confVal(r,c))+(low?' <span style="color:#b42318">&#9679; revisar</span>':'')+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});pdfFrame.src=r._pdfData||'about:blank';reviewModal.classList.remove('hidden')}
+function openReview(i){editingIndex=i;let r=records[i];$('revFile').textContent=fileOf(r)||'-';reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let low=c!=='Archivo Origen'&&confVal(r,c)<thr();if(low)d.classList.add('needfix');let ctl=(c==='Banco')?('<select name="'+c+'">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'"><option></option><option>CUENTA VISTA</option><option>CUENTA CORRIENTE</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+(c!=='Archivo Origen'?(' '+badge(confVal(r,c))+(low?' <span style="color:#b42318">&#9679; revisar</span>':'')):'')+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});
+ if(r._pdfData){pdfFrame.src=r._pdfData;pdfFrame.classList.remove('hidden');$('noPdf').classList.add('hidden');$('pdfName').textContent=r._pdfName||fileOf(r)||'Previsualizacion'}else{pdfFrame.src='about:blank';pdfFrame.classList.add('hidden');$('noPdf').classList.remove('hidden');$('pdfName').textContent='Sin PDF adjunto'}
+ reviewModal.classList.remove('hidden')}
 closeReview.onclick=()=>reviewModal.classList.add('hidden');
 deleteReview.onclick=()=>{if(editingIndex!=null){records.splice(editingIndex,1);save();reviewModal.classList.add('hidden')}};
-reviewForm.onsubmit=e=>{e.preventDefault();let r=records[editingIndex];COLS.forEach(c=>{let el=reviewForm.elements[c];if(el){r[c]=el.value;if(r[c])r._conf[c]=100}});save();reviewModal.classList.add('hidden')};
+reviewForm.onsubmit=e=>{e.preventDefault();let r=records[editingIndex];COLS.forEach(c=>{let el=reviewForm.elements[c];if(el){r[c]=el.value;if(r[c]&&c!=='Archivo Origen')r._conf[c]=100}});save();reviewModal.classList.add('hidden')};
 function loadScript(src,ok,fail){if([...document.scripts].some(s=>s.src===src))return ok();let s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail||(()=>alert('No se pudo cargar libreria externa.'));document.head.appendChild(s)}
 function ensureX(cb){window.XLSX?cb():loadScript('https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',cb,()=>alert('No se pudo cargar SheetJS'))}
-function mapObj(o){let r=initRecord();COLS.forEach(c=>{let k=Object.keys(o).find(x=>x.trim().toLowerCase()===c.toLowerCase());r[c]=k?(o[k]||'').toString():''});if(o._conf)r._conf=o._conf;else COLS.forEach(c=>{if(r[c])r._conf[c]=95});return r}
+function mapObj(o){let r=initRecord();COLS.forEach(c=>{let k=Object.keys(o).find(x=>x.trim().toLowerCase()===c.toLowerCase());r[c]=k?(o[k]||'').toString():''});if(o._conf)r._conf=o._conf;else COLS.forEach(c=>{if(r[c]&&c!=='Archivo Origen')r._conf[c]=95});
+ let pn=r['Archivo Origen']||o._pdf||o._pdfName||o.archivo_pdf||'';if(pn){r._pdfName=pn.toString();if(!r['Archivo Origen'])r['Archivo Origen']=pn.toString()}return r}
 function toDataURL(file){return new Promise((res,rej)=>{let fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file)})}
-async function sendToFlow(file){const url=activeFlowUrl();const dataUrl=await toDataURL(file);
- if(!url){let r=initRecord();r._pdfName=file.name;r._pdfData=dataUrl;records.push(r);save();status('Sin flujo configurado. PDF guardado como pendiente de revision manual.',true);return}
- status('Enviando '+file.name+' al agente...');
- try{const b64=dataUrl.split(',')[1];
-  const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fileName:file.name,contentType:'application/pdf',fileBase64:b64})});
-  if(!resp.ok)throw new Error('HTTP '+resp.status);
-  const data=await resp.json();const arr=Array.isArray(data)?data:(data.registros||[]);
-  if(!arr.length)throw new Error('El flujo no devolvio registros');
-  arr.forEach(o=>{let r=mapObj(o);r._pdfName=file.name;r._pdfData=dataUrl;records.push(r)});
-  save();status('Lectura recibida. Revisa solo los campos marcados bajo '+thr()+'%.');
- }catch(err){let r=initRecord();r._pdfName=file.name;r._pdfData=dataUrl;records.push(r);save();status('No se pudo leer con el agente ('+err.message+'). PDF guardado para revision manual.',true)}
-}
-function handlePDFs(files){[...files].filter(f=>/pdf$/i.test(f.name)).forEach(sendToFlow)}
-btnTogglePdf.onclick=()=>{dropzone.classList.toggle('hidden');btnTogglePdf.textContent=dropzone.classList.contains('hidden')?'Cargar PDF':'Ocultar carga PDF'};
-dropzone.onclick=e=>{if(e.target.id!=='pdfInput')pdfInput.click()};
-['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('over')}));
-['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('over')}));
-dropzone.addEventListener('drop',e=>handlePDFs(e.dataTransfer.files));pdfInput.onchange=e=>handlePDFs(e.target.files);
-btnImport.onclick=()=>{fileInput.accept='.xlsx,.xls,.csv,.json';fileInput.click()};
-fileInput.onchange=e=>{let f=e.target.files[0];if(!f)return;if(f.name.toLowerCase().endsWith('.json')){f.text().then(t=>{let j=JSON.parse(t);let arr=Array.isArray(j)?j:(j.registros||[]);arr.forEach(o=>records.push(mapObj(o)));save()})}else{ensureX(async()=>{let wb=XLSX.read(await f.arrayBuffer());let arr=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});arr.forEach(o=>records.push(mapObj(o)));save()})}};
+btnImport.onclick=()=>{fileInput.click()};
+fileInput.onchange=e=>{let f=e.target.files[0];if(!f)return;let before=records.length;
+ if(f.name.toLowerCase().endsWith('.json')){f.text().then(t=>{let j=JSON.parse(t);let arr=Array.isArray(j)?j:(j.registros||[]);let pdfName=j.archivo_pdf||'';arr.forEach(o=>{let r=mapObj(o);if(!r['Archivo Origen']&&pdfName){r['Archivo Origen']=pdfName;r._pdfName=pdfName}records.push(r)});save();status('Importados '+(records.length-before)+' registros. Ahora pulsa "2. Adjuntar PDF".')})}
+ else{ensureX(async()=>{let wb=XLSX.read(await f.arrayBuffer());let arr=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});arr.forEach(o=>records.push(mapObj(o)));save();status('Importados '+(records.length-before)+' registros. Ahora pulsa "2. Adjuntar PDF".')})}
+ fileInput.value=''};
+btnAttach.onclick=()=>{pdfInput.click()};
+pdfInput.onchange=async e=>{let files=[...e.target.files];let matched=0,added=0;
+ for(let f of files){let data=await toDataURL(f);let key=norm(f.name);
+   let rs=records.filter(r=>norm(fileOf(r))===key || norm(fileOf(r))===norm(f.name));
+   if(rs.length){rs.forEach(r=>{r._pdfData=data;r._pdfName=f.name;matched++})}
+   else{let rs2=records.filter(r=>(norm(r['Rut Titular']).length>5&&key.includes(norm(r['Rut Titular'])))||(r.Nombres&&key.includes(norm(r.Nombres))));
+     if(rs2.length){rs2.forEach(r=>{r._pdfData=data;r._pdfName=f.name;if(!r['Archivo Origen'])r['Archivo Origen']=f.name;matched++})}
+     else{let r=initRecord();r['Archivo Origen']=f.name;r._pdfName=f.name;r._pdfData=data;records.push(r);added++}}}
+ save();status('PDF adjuntados: '+matched+' unidos por archivo'+(added?(', '+added+' nuevos pendientes'):'')+'.')};
+btnAdd.onclick=()=>{records.push(initRecord());save();openReview(records.length-1)};
 btnXlsx.onclick=()=>ensureX(()=>{let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records.map(r=>{let o={};COLS.forEach(c=>o[c]=r[c]||'');o['Fiabilidad %']=avg(r);return o}),{header:COLS.concat(['Fiabilidad %'])}),'Altas');XLSX.writeFile(wb,'remesa_altas_brosys.xlsx')});
 btnCsv.onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(';')));let b=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='remesa_altas_brosys.csv';a.click()};
 btnClear.onclick=()=>{if(confirm('Limpiar base local?')){records=[];save()}};
 search.oninput=render;
 document.querySelectorAll('.nav[data-view]').forEach(n=>n.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));n.classList.add('on');let v=n.dataset.view;viewBase.classList.toggle('hidden',v!=='base');viewConfig.classList.toggle('hidden',v!=='config')});
-function refreshConn(){let url=activeFlowUrl();let ok=!!url;connDot.classList.toggle('ok',ok);connText.textContent=ok?'Agente conectado':'Sin conexion';let c=getCfg();flowUrl.value=c.flowUrl||FLOW_URL_DEFAULT||'';thr_el.value=c.thr!=null?c.thr:70}
-const thr_el=$('thr');
-btnSaveFlow.onclick=()=>{setCfg({flowUrl:flowUrl.value.trim(),thr:Number(thr_el.value)||70});cfgMsg.textContent='Configuracion guardada en este navegador.';refreshConn();render()};
-btnTestFlow.onclick=async()=>{let u=flowUrl.value.trim()||FLOW_URL_DEFAULT;if(!u){cfgMsg.textContent='Ingresa la URL del flujo primero.';return}cfgMsg.textContent='Probando...';try{let resp=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ping:true})});cfgMsg.textContent='Respuesta del flujo: HTTP '+resp.status+(resp.ok?' (OK)':'')}catch(e){cfgMsg.textContent='No se pudo contactar el flujo: '+e.message}};
-load();refreshConn();render();
+load();render();
 </script></body></html>
