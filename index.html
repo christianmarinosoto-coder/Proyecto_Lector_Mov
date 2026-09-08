@@ -129,8 +129,43 @@ function switchView(v){document.querySelectorAll('.navitem').forEach(x=>x.classL
 document.querySelectorAll('.navitem[data-view]').forEach(n=>n.onclick=()=>switchView(n.dataset.view));
 $('btnOCR').onclick=()=>{switchView('ocr');pdfInputOCR.click()};
 function loadScript(src,ok,fail){if([...document.scripts].some(s=>s.src===src))return ok();let s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail||(()=>alert('No se pudo cargar '+src));document.head.appendChild(s)}
-function ensureX(cb){window.XLSX?cb():loadScript('https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',cb,()=>alert('No se pudo cargar SheetJS'))}
-function ensurePDF(cb){window.pdfjsLib?cb():loadScript('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',()=>{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';cb()},()=>status('No se pudo cargar PDF.js. Revisa tu conexión.',true))}
+function ensureX(cb,fail){
+  if(window.XLSX)return cb();
+  _tryScripts([
+    './libs/xlsx.full.min.js','libs/xlsx.full.min.js','./xlsx.full.min.js',
+    'https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
+  ],function(){cb()},function(){fail&&fail()});
+}
+var _pdfState=0; // 0 no intentado, 1 ok, 2 fallo
+function _tryScripts(list,ok,fail){
+  if(!list.length)return fail&&fail();
+  var src=list[0];
+  var done=false;var to=setTimeout(function(){if(done)return;done=true;_tryScripts(list.slice(1),ok,fail)},7000);
+  var s=document.createElement('script');s.src=src;
+  s.onload=function(){if(done)return;done=true;clearTimeout(to);ok(src)};
+  s.onerror=function(){if(done)return;done=true;clearTimeout(to);_tryScripts(list.slice(1),ok,fail)};
+  document.head.appendChild(s);
+}
+function ensurePDF(cb,fail){
+  if(window.pdfjsLib){_pdfState=1;return cb()}
+  if(_pdfState===2)return fail&&fail();
+  // 1) local en el repo  2) CDNs de respaldo
+  _tryScripts([
+    './libs/pdf.min.js',
+    'libs/pdf.min.js',
+    './pdf.min.js',
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
+  ],function(loadedFrom){
+    try{
+      var wbase=loadedFrom.replace(/pdf\.min\.js.*$/,'');
+      // elegir worker del mismo origen que el que cargó
+      pdfjsLib.GlobalWorkerOptions.workerSrc = wbase+'pdf.worker.min.js';
+    }catch(e){}
+    _pdfState=1;cb();
+  },function(){_pdfState=2;fail&&fail()});
+}
 function toDataURL(file){return new Promise((res,rej)=>{let fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file)})}
 function b64ToU8(dataUrl){let b=atob(dataUrl.split(',')[1]);let u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
 function U(s){return (s||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/Ñ/g,'N').replace(/ñ/g,'n').toUpperCase().trim()}
@@ -159,15 +194,26 @@ function parseText(txt,fname){let r=initRecord();r['Archivo Origen']=fname;r._pd
  if(up.includes('CUENTA CORRIENTE')||up.includes('CTA CORRIENTE'))setC(r,'Tipo Cuenta','CUENTA CORRIENTE',72);else if(up.includes('CUENTA VISTA')||up.includes('CTA VISTA')||up.includes('CUENTA RUT'))setC(r,'Tipo Cuenta','CUENTA VISTA',72);
  r['Tipo Movimiento']=r['Rut Carga']?'T+C':'T';r._conf['Tipo Movimiento']=70;
  return r}
-async function readOne(file){let fname=file.name;let dataUrl=await toDataURL(file);
- return await new Promise(resolve=>{ensurePDF(async()=>{try{
-   let pdf=await pdfjsLib.getDocument({data:b64ToU8(dataUrl)}).promise;
-   let text='';for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let tc=await page.getTextContent();text+=tc.items.map(i=>i.str).join(' ')+' '}
-   let r=parseText(text,fname);r._pdfData=dataUrl;resolve(r)
- }catch(e){let r=parseText('',fname);r._pdfData=dataUrl;resolve(r)}})})}
+function readOne(file){return new Promise(async resolve=>{
+ let fname=file.name;let dataUrl='';try{dataUrl=await toDataURL(file)}catch(e){}
+ let finished=false;
+ function done(text){if(finished)return;finished=true;let r=parseText(text||'',fname);r._pdfData=dataUrl;resolve(r)}
+ // timeout global de seguridad: 15s por PDF, pase lo que pase
+ let guard=setTimeout(()=>done(''),15000);
+ ensurePDF(async()=>{
+   try{
+     let pdf=await pdfjsLib.getDocument({data:b64ToU8(dataUrl)}).promise;
+     let text='';for(let p=1;p<=pdf.numPages&&p<=6;p++){let page=await pdf.getPage(p);let tc=await page.getTextContent();text+=tc.items.map(i=>i.str).join(' ')+' '}
+     clearTimeout(guard);done(text)
+   }catch(e){clearTimeout(guard);done('')}
+ },()=>{clearTimeout(guard);done('')}); // fail -> igual crea registro con PDF adjunto
+})}
 async function handlePDFs(files){let arr=[...files].filter(f=>/pdf$/i.test(f.name));if(!arr.length)return;let n=0,leidos=0;
- for(let f of arr){status('Leyendo '+f.name+'…');let r=await readOne(f);records.push(r);n++;if(avg(r)>0)leidos++;save()}
- status('Listo: '+n+' PDF cargados ('+leidos+' con datos leídos). Revisa lo que quede bajo '+THRESH+'%.');switchView('base')}
+ for(let f of arr){status('Leyendo '+f.name+'… (máx 15s)');let r=await readOne(f);records.push(r);n++;if(avg(r)>0)leidos++;save()}
+ let msg='Listo: '+n+' PDF cargados ('+leidos+' con datos leídos).';
+ if(leidos===0){msg+=' No se pudo leer texto (¿PDF escaneado o el lector bloqueado por la red?). Los PDF quedaron adjuntos para completar a mano o usa "Importar del agente".'}
+ else{msg+=' Revisa lo que quede bajo '+THRESH+'%.'}
+ status(msg,leidos===0);switchView('base')}
 $('dropzone').onclick=e=>{if(e.target.id!=='pdfInputOCR')pdfInputOCR.click()};
 ['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('over')}));
 ['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('over')}));
@@ -181,7 +227,8 @@ fileInput.onchange=e=>{let f=e.target.files[0];if(!f)return;let before=records.l
 $('btnAttach').onclick=()=>pdfInputAttach.click();
 pdfInputAttach.onchange=async e=>{let files=[...e.target.files];let matched=0;for(let f of files){let data=await toDataURL(f);let key=normk(f.name);let rs=records.filter(r=>normk(fileOf(r))===key);if(rs.length)rs.forEach(r=>{r._pdfData=data;r._pdfName=f.name;matched++});else{let r=initRecord();r['Archivo Origen']=f.name;r._pdfName=f.name;r._pdfData=data;records.push(r)}}save();status('PDF adjuntados: '+matched+' unidos por archivo.')};
 $('btnAdd').onclick=()=>{records.push(initRecord());save();openReview(records.length-1)};
-$('btnXlsx').onclick=()=>ensureX(()=>{let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records.map(r=>{let o={};COLS.forEach(c=>o[c]=r[c]||'');o['Fiabilidad %']=avg(r);return o}),{header:COLS.concat(['Fiabilidad %'])}),'Altas');XLSX.writeFile(wb,'Base_Altas_Brosys.xlsx')});
+function exportCSV(){let cols=COLS.concat(['Fiabilidad %']);let lines=[cols.join(';')].concat(records.map(r=>cols.map(c=>{let v=c==='Fiabilidad %'?avg(r):(r[c]||'');return '"'+String(v).replace(/"/g,'""')+'"'}).join(';')));let b=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Base_Altas_Brosys.csv';a.click()}
+$('btnXlsx').onclick=()=>{status('Generando Excel…');ensureX(()=>{try{let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records.map(r=>{let o={};COLS.forEach(c=>o[c]=r[c]||'');o['Fiabilidad %']=avg(r);return o}),{header:COLS.concat(['Fiabilidad %'])}),'Altas');XLSX.writeFile(wb,'Base_Altas_Brosys.xlsx');status('Excel generado.')}catch(e){exportCSV();status('Se exportó CSV (abre en Excel).')}},()=>{exportCSV();status('Librería Excel no disponible en esta red: se exportó CSV (abre en Excel).')})};
 $('btnCsv').onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(';')));let b=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Base_Altas_Brosys.csv';a.click()};
 $('btnClear').onclick=()=>{if(confirm('¿Limpiar la base local?')){records=[];save()}};
 $('search').oninput=render;
