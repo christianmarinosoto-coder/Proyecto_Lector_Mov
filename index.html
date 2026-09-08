@@ -1,46 +1,56 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lector.zzy</title>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lector.zzy · Agente Lector Brosys</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--nav:#0b1726;--nav2:#11263c;--accent:#18b7b5;--gold:#f2c14e;--bg:#f4f8fb;--line:#dbe7ee;--text:#152033;--muted:#64748b;--ok:#e8f8ef;--mid:#fff8db;--low:#fff0df;--danger:#b42318}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
-.side{background:linear-gradient(180deg,var(--nav),var(--nav2));color:white;padding:22px 16px;position:sticky;top:0;height:100vh}
-.brand{display:flex;gap:10px;align-items:center;margin-bottom:22px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;color:#07111d;font-weight:900}.brand h1{font-size:22px;margin:0}.brand small{color:#9fb7c9}
-.nav{padding:11px;border-radius:12px;color:#c8d9e6;font-weight:800;margin:5px 0;cursor:pointer}.nav.on{background:#ffffff14;color:white}
-.conn{margin-top:16px;padding:12px;border:1px solid #ffffff22;border-radius:12px;font-size:12px}.conn .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#63d29b;margin-right:6px}
-.foot{position:absolute;bottom:16px;left:16px;right:16px;color:#90a8b8;font-size:11px;line-height:1.35}
-.main{padding:22px 26px;min-width:0}.top{display:flex;justify-content:space-between;gap:16px;margin-bottom:16px}.title h2{font-size:29px;margin:0}.title p{margin:6px 0 0;color:var(--muted)}.pill{height:max-content;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:white;color:var(--muted);font-weight:800}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 8px 22px #0c16200d}.num{font-size:28px;font-weight:900;color:var(--nav2)}.lbl{font-size:11px;color:var(--muted);font-weight:850}
-.toolbar{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;display:grid;grid-template-columns:minmax(200px,1fr) repeat(7,max-content);gap:8px;align-items:center;margin-bottom:12px}
-input{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
-button{border:1px solid var(--line);background:white;color:var(--nav2);border-radius:12px;padding:10px 12px;font-weight:850;cursor:pointer;font-size:14px;white-space:nowrap}button.primary{background:var(--accent);border-color:var(--accent);color:#04201f}button.dark{background:var(--nav2);border-color:var(--nav2);color:white}button.danger{border-color:#f0b1b1;color:var(--danger)}button.gold{background:var(--gold);border-color:var(--gold);color:#3b2d04}
+:root{--ink:#0b1220;--nav:#0d1b2a;--nav2:#16324f;--accent:#2dd4bf;--accent2:#38bdf8;--indigo:#6366f1;--gold:#f2c14e;--bg:#0e1526;--panel:#111c30;--panel2:#0f1930;--line:#22304a;--txt:#e6edf6;--muted:#8ba0b8;--ok:#1f9d6b;--okbg:#0f2e24;--mid:#b98900;--midbg:#2e2710;--low:#e05555;--lowbg:#33161a}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(1200px 600px at 80% -10%,#16324f33,transparent),var(--bg);color:var(--txt)}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+.side{background:linear-gradient(180deg,#0b1626,#0a1220);border-right:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.brand{display:flex;gap:12px;align-items:center;margin-bottom:8px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#04201f;font-weight:900;font-size:20px;box-shadow:0 8px 24px #2dd4bf33}.brand h1{font-size:20px;margin:0;letter-spacing:-.02em}.brand small{color:var(--muted);font-size:11px}
+.badge-ai{margin:14px 0 18px;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#7ff0e2;background:#0f2e2b;border:1px solid #1c4f49;border-radius:999px;padding:5px 10px;width:max-content}
+.navitem{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;color:var(--muted);font-weight:700;margin:3px 0;cursor:pointer;font-size:14px}.navitem.on{background:#12233a;color:#fff}.navitem .ic{width:18px;text-align:center}
+.step{display:flex;gap:10px;align-items:flex-start;margin:9px 2px;font-size:12px;color:var(--muted)}.step b{color:#cfe0f2}.step .n{width:20px;height:20px;border-radius:50%;background:#12233a;color:#7ff0e2;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.sidefoot{margin-top:auto;color:#5f748c;font-size:11px;line-height:1.4;border-top:1px solid var(--line);padding-top:12px}
+.main{padding:22px 26px;min-width:0}.top{display:flex;justify-content:space-between;gap:16px;margin-bottom:16px;align-items:flex-start}.title h2{font-size:26px;margin:0;letter-spacing:-.02em}.title p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--muted);font-weight:800;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:15px;position:relative;overflow:hidden}.card::after{content:"";position:absolute;right:-20px;top:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#2dd4bf22,transparent 70%)}.num{font-size:27px;font-weight:900;color:#fff}.lbl{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:.03em;margin-top:6px}
+.toolbar{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+input,select{border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:14px;background:#0b1526;color:var(--txt)}input::placeholder{color:#5f748c}#search{flex:1;min-width:220px}
+button{border:1px solid var(--line);background:#0f1c30;color:var(--txt);border-radius:11px;padding:10px 13px;font-weight:800;cursor:pointer;font-size:14px;white-space:nowrap;transition:.15s}button:hover{border-color:#33507a}button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;color:#04201f}button.dark{background:#16324f;border-color:#16324f}button.danger{border-color:#5a2b2b;color:#f0a8a8}button.gold{background:linear-gradient(135deg,#f2c14e,#e0a52a);border:0;color:#3b2d04}
 .hidden{display:none!important}
-.status{min-height:22px;margin:0 0 12px;color:var(--nav2);font-weight:850}.status.bad{color:var(--danger)}
-.panel{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden}.panelHead{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}.panelHead h3{margin:0}
-.baseWrap{overflow:auto;max-height:64vh}table{border-collapse:collapse;width:max-content;min-width:100%}th,td{border-bottom:1px solid var(--line);padding:9px 10px;font-size:12px;white-space:nowrap;text-align:left}th{position:sticky;top:0;background:#f7fbfd;border-bottom:2px solid var(--accent)}
-.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900;white-space:nowrap}.high{background:var(--ok);color:#17663a}.med{background:var(--mid);color:#7a5b00}.low{background:var(--low);color:#9a3412}.file{background:#eef2f8;color:#3b4a5c}
-.empty{padding:56px;text-align:center;color:var(--muted)}
-.modal{position:fixed;inset:0;background:#07111dcc;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
-.reviewPanel{background:white;width:min(1560px,97vw);height:min(920px,93vh);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 24px 70px #0008}.left{padding:18px;overflow:auto}.right{border-left:1px solid var(--line);background:#eef5f8;display:flex;flex-direction:column}
-.mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{font-size:12px;font-weight:850;color:#516273;display:block}.field input,.field select{width:100%;margin-top:4px;padding:9px;border:1px solid #dbe7ee;border-radius:10px}.field.needfix input,.field.needfix select{border-color:#e6a4a4;background:#fff6f6}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-.legend{font-size:12px;color:var(--muted);margin:6px 0 12px}
-.pdfbar{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;background:white}.pdfview{flex:1;border:0;width:100%;background:#eef5f8}.nopdf{margin:auto;color:var(--muted);text-align:center;padding:20px}
-.cfgCard{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;max-width:820px}.cfgCard h3{margin-top:0}.help{font-size:13px;color:var(--muted);line-height:1.5}
-.steps{background:#fffdf5;border:1px solid #f0e2b8;border-radius:14px;padding:12px 16px;margin-bottom:12px;font-size:13px;color:#5b4a12}.steps b{color:#3b2d04}
-@media(max-width:1100px){.toolbar{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.reviewPanel{grid-template-columns:1fr}.right{min-height:420px;border-left:0;border-top:1px solid var(--line)}.grid{grid-template-columns:1fr}}
-@media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.foot{display:none}.toolbar{grid-template-columns:1fr}.cards{grid-template-columns:1fr}}
+.drop{border:1.6px dashed var(--accent);background:linear-gradient(180deg,#0f2e2b55,#0b152655);border-radius:16px;padding:26px;text-align:center;margin-bottom:12px;cursor:pointer;transition:.15s}.drop.over{background:#0f2e2b99;border-color:#7ff0e2}.drop h3{margin:0 0 4px;font-size:17px;color:#eafffb}.drop small{color:var(--muted)}
+.ocrbar{height:8px;background:#0b1526;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:12px;display:none}.ocrbar.on{display:block}.ocrbar > div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.2s}
+.status{min-height:22px;margin:0 0 12px;color:#a9c2dc;font-weight:700;font-size:13px}.status.bad{color:#f0a8a8}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.panelHead{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px solid var(--line)}.panelHead h3{margin:0;font-size:15px}
+.baseWrap{overflow:auto;max-height:60vh}table{border-collapse:collapse;width:max-content;min-width:100%}th,td{border-bottom:1px solid var(--line);padding:9px 11px;font-size:12px;white-space:nowrap;text-align:left}th{position:sticky;top:0;background:#0d1a2c;color:#b9cbe0;border-bottom:2px solid #24405f;font-weight:800;z-index:1}tr:hover td{background:#0d1a2c66}
+.badge{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:900;white-space:nowrap}.high{background:var(--okbg);color:#5fe0a8}.med{background:var(--midbg);color:#f0c766}.low{background:var(--lowbg);color:#f2a1a1}.file{background:#182a44;color:#a9c2dc}
+.empty{padding:52px;text-align:center;color:var(--muted)}.empty .big{font-size:15px;color:#c4d4e6;margin-bottom:6px}
+.modal{position:fixed;inset:0;background:#04060cd0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+.reviewPanel{background:var(--panel);width:min(1560px,97vw);height:min(920px,94vh);border-radius:18px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}.left{padding:18px;overflow:auto}.right{border-left:1px solid var(--line);background:#0a1220;display:flex;flex-direction:column}
+.mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{font-size:12px;font-weight:800;color:#9db4cc;display:block}.field input,.field select{width:100%;margin-top:4px}.field.needfix input,.field.needfix select{border-color:#7a3b3b;background:#2a1518}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.legend{font-size:12px;color:var(--muted);margin:2px 0 12px}
+.pdfbar{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;background:#0d1a2c}.pdfview{flex:1;border:0;width:100%;background:#0a1220}.nopdf{margin:auto;color:var(--muted);text-align:center;padding:20px}
+.cfgCard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:900px}.cfgCard h3{margin-top:0}.help{font-size:14px;color:#b9cbe0;line-height:1.6}
+@media(max-width:1100px){.cards{grid-template-columns:1fr 1fr}.reviewPanel{grid-template-columns:1fr}.right{min-height:420px;border-left:0;border-top:1px solid var(--line)}.grid{grid-template-columns:1fr}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.cards{grid-template-columns:1fr}}
 </style></head><body>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="logo">Z</div><div><h1>Lector.zzy</h1><small>PDF a remesa Brosys</small></div></div>
-  <div class="nav on" data-view="base">Base</div>
-  <div class="nav" data-view="config">Ayuda / Flujo</div>
-  <div class="conn"><span class="dot"></span><span>Modo agente + PDF</span></div>
-  <div class="foot">Importa la lectura del agente, adjunta los PDF y completa lo que quede bajo 70% mirando el documento.</div>
+  <div class="brand"><div class="logo">Z</div><div><h1>Lector.zzy</h1><small>Agente Lector · Brosys</small></div></div>
+  <div class="badge-ai">● IA · lectura asistida de formularios</div>
+  <div class="navitem on" data-view="base"><span class="ic">▤</span> Base de datos</div>
+  <div class="navitem" data-view="ocr"><span class="ic">◎</span> Lectura OCR (demo)</div>
+  <div class="navitem" data-view="config"><span class="ic">✎</span> Cómo funciona</div>
+  <div style="margin:16px 2px 6px;color:#5f748c;font-size:11px;font-weight:800;letter-spacing:.05em">FLUJO</div>
+  <div class="step"><div class="n">1</div><div><b>Cargar PDF</b><br>lectura OCR o desde el agente</div></div>
+  <div class="step"><div class="n">2</div><div><b>Confianza</b><br>cada dato con su % (semáforo)</div></div>
+  <div class="step"><div class="n">3</div><div><b>Revisar &lt;70%</b><br>formulario + PDF lado a lado</div></div>
+  <div class="step"><div class="n">4</div><div><b>Exportar</b><br>remesa Altas Brosys</div></div>
+  <div class="sidefoot">Human-in-the-loop con umbral de confianza. La IA lee; el criterio final es humano.</div>
 </aside>
 <main class="main">
-  <div class="top"><div class="title"><h2>Lector.zzy</h2><p>Importa la lectura del agente, adjunta los PDF y valida lo que quede bajo 70% de fiabilidad.</p></div><div class="pill" id="statusPill">Listo</div></div>
+  <div class="top"><div class="title"><h2 id="viewTitle">Base de datos</h2><p id="viewSub">Titulares y cargas con nivel de confianza por campo.</p></div><div class="pill" id="statusPill">Listo</div></div>
+
   <section id="viewBase">
-    <div class="steps">Flujo: <b>1)</b> Importa el Excel/JSON del agente &nbsp; <b>2)</b> Adjunta los PDF (para verlos al revisar) &nbsp; <b>3)</b> Revisa lo rojo (&lt;70%) usando la columna "Archivo Origen" &nbsp; <b>4)</b> Exporta el Excel Brosys.</div>
     <div class="cards">
       <div class="card"><div id="stTotal" class="num">0</div><div class="lbl">REGISTROS</div></div>
       <div class="card"><div id="stTit" class="num">0</div><div class="lbl">TITULARES</div></div>
@@ -48,92 +58,133 @@ button{border:1px solid var(--line);background:white;color:var(--nav2);border-ra
       <div class="card"><div id="stAvg" class="num">0%</div><div class="lbl">CONFIANZA MEDIA</div></div>
     </div>
     <div class="toolbar">
-      <input id="search" placeholder="Buscar RUT, nombre, archivo, poliza...">
-      <button id="btnImport" class="primary">1. Importar Excel/JSON</button>
-      <button id="btnAttach" class="gold">2. Adjuntar PDF</button>
-      <button id="btnAdd">Agregar manual</button>
-      <button id="btnXlsx" class="dark">Exportar Excel</button>
+      <input id="search" placeholder="Buscar RUT, nombre, archivo, banco...">
+      <button id="btnOCR" class="primary">◎ Leer PDF (OCR)</button>
+      <button id="btnImport" class="dark">Importar del agente</button>
+      <button id="btnAttach" class="gold">Adjuntar PDF</button>
+      <button id="btnAdd">+ Manual</button>
+      <button id="btnXlsx">⬇ Exportar Excel</button>
       <button id="btnCsv">CSV</button>
       <button id="btnClear" class="danger">Limpiar</button>
       <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,.json" class="hidden">
-      <input id="pdfInput" type="file" accept="application/pdf" multiple class="hidden">
+      <input id="pdfInputAttach" type="file" accept="application/pdf" multiple class="hidden">
     </div>
-    <div id="statusBar" class="status"></div>
-    <section class="panel"><div class="panelHead"><h3>Base</h3><span>Formato Excel - titulares y cargas</span></div><div id="baseBox" class="baseWrap"><div class="empty">Importa el Excel/JSON del agente para comenzar. Luego adjunta los PDF.</div></div></section>
+    <section class="panel"><div class="panelHead"><h3>Base — formato remesa Altas</h3><span style="color:var(--muted);font-size:12px">titulares + cargas</span></div><div id="baseBox" class="baseWrap"><div class="empty"><div class="big">Aún no hay registros</div>Usa <b>Leer PDF (OCR)</b> para una demo de lectura automática, o <b>Importar del agente</b> para cargar una lectura del agente de Copilot.</div></div></section>
   </section>
+
+  <section id="viewOCR" class="hidden">
+    <div id="dropzone" class="drop"><h3>◎ Arrastra los PDF aquí o haz clic para seleccionar</h3><small>La lectura OCR se ejecuta 100% en tu navegador (PDF.js + Tesseract.js). Ideal para digitales; en manuscritos el % será menor y pasarán a revisión.</small><div id="ocrbar" class="ocrbar"><div id="ocrfill"></div></div><input id="pdfInputOCR" type="file" accept="application/pdf" multiple class="hidden"></div>
+    <div id="ocrStatus" class="status"></div>
+    <div class="cfgCard"><h3>Sobre la lectura OCR (demo)</h3>
+      <p class="help">Esta pestaña demuestra la <b>lectura automática dentro de la página</b>. Extrae texto del PDF (capa de texto o imagen vía OCR), detecta RUT, email, teléfono y fechas, y crea registros con un <b>% de confianza</b>. Lo que quede bajo 70% se marca para revisión humana.</p>
+      <p class="help"><b>Nota honesta:</b> el OCR en navegador es una demostración; para máxima precisión (sobre todo manuscritos) se usa el <b>agente de Copilot</b>, que además aplica todas las reglas del instructivo Brosys. Ambos alimentan la misma Base.</p>
+    </div>
+  </section>
+
   <section id="viewConfig" class="hidden">
     <div class="cfgCard">
-      <h3>Como usar Lector.zzy <span style="font-size:12px;color:#64748b">sin Power Automate</span></h3>
-      <p class="help"><b>1) Importar.</b> En tu agente carga los PDF y pide el resultado en Excel o JSON. Aqui pulsa "1. Importar Excel/JSON". La base se llena con datos, % de fiabilidad y la columna "Archivo Origen".</p>
-      <p class="help"><b>2) Adjuntar PDF.</b> Pulsa "2. Adjuntar PDF" y selecciona los mismos PDF. Se unen por nombre de archivo (usa "Archivo Origen").</p>
-      <p class="help"><b>3) Revisar.</b> Los campos bajo 70% salen en rojo. La columna "Archivo Origen" te dice cual PDF abrir. Pulsa "Revisar": formulario a la izquierda, PDF a la derecha.</p>
-      <p class="help"><b>4) Exportar.</b> Pulsa "Exportar Excel" para la remesa Altas Brosys (columnas + Fiabilidad %).</p>
+      <h3>Cómo funciona el Agente Lector</h3>
+      <p class="help"><b>1) Lectura.</b> Los formularios se leen de dos formas: el <b>agente de Copilot</b> (máxima precisión, aplica reglas Brosys) o el <b>OCR de la página</b> (demo, para digitales).</p>
+      <p class="help"><b>2) Confianza.</b> Cada dato recibe un porcentaje de fiabilidad. Semáforo: <span class="badge high">≥90</span> <span class="badge med">70–89</span> <span class="badge low">&lt;70</span>.</p>
+      <p class="help"><b>3) Revisión humana.</b> Solo los datos bajo 70% pasan a revisión. Se abre el formulario junto al PDF y la columna <b>Archivo Origen</b> indica qué documento mirar.</p>
+      <p class="help"><b>4) Exportación.</b> Se genera la remesa Altas Brosys con las columnas exactas + Fiabilidad % + Archivo Origen.</p>
+      <p class="help"><b>Principio:</b> <i>human-in-the-loop con umbral de confianza</i> — la IA hace el trabajo pesado y el humano decide sobre lo dudoso. Ideal para datos sensibles (RUT, cuentas).</p>
     </div>
   </section>
 </main>
 </div>
 <div id="reviewModal" class="modal hidden"><div class="reviewPanel">
-  <section class="left"><div class="mtop"><h3>Revision del registro</h3><button id="closeReview">Cerrar</button></div>
-    <div class="legend">Campos en <b style="color:#b42318">rojo</b> = fiabilidad bajo el umbral. Archivo de origen: <b id="revFile">-</b></div>
+  <section class="left"><div class="mtop"><h3>Revisión del registro</h3><button id="closeReview">Cerrar</button></div>
+    <div class="legend">Campos en <b style="color:#f2a1a1">rojo</b> = bajo el umbral. Archivo de origen: <b id="revFile">-</b></div>
     <form id="reviewForm"><div id="reviewFields" class="grid"></div><div class="actions"><button type="button" id="deleteReview" class="danger">Eliminar</button><button class="primary" type="submit">Guardar cambios</button></div></form>
   </section>
-  <section class="right"><div class="pdfbar"><strong>PDF original</strong><span id="pdfName">Previsualizacion</span></div><iframe id="pdfFrame" class="pdfview"></iframe><div id="noPdf" class="nopdf hidden">Este registro no tiene PDF adjunto. Usa "2. Adjuntar PDF" con el archivo indicado en Archivo Origen.</div></section>
+  <section class="right"><div class="pdfbar"><strong>PDF original</strong><span id="pdfName">Previsualización</span></div><iframe id="pdfFrame" class="pdfview"></iframe><div id="noPdf" class="nopdf hidden">Sin PDF adjunto. Usa "Adjuntar PDF" con el archivo indicado en Archivo Origen.</div></section>
 </div></div>
 <script>
-const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud", "DB", "Archivo Origen"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyV5';const CFG='lectorZzyCfgV5';
+const COLS=["Rut Titular", "Nombres", "Apellido Paterno", "Apellido Materno", "Sexo", "Fecha Nacimiento", "Tipo Movimiento", "Telefono", "Email", "Poliza", "Numero Grupo", "Fecha Inicio", "Capital", "Renta", "Peso", "Estatura", "Pre exisstencia", "Sucursal", "Area", "Cargo", "Banco", "Tipo Cuenta", "Numero Cuenta", "Rut Carga", "Nombre Carga", "Apellido Paterno Carga", "Apellido Materno Carga", "Rol Carga", "Sexo Carga", "Fecha Nacimiento Carga", "Fecha Inicio Vigencia Carga", "Fecha Solicitud", "DB", "Archivo Origen"];const BANCOS=["", "Banco BHIF - BBVA", "Banco BICE", "Banco Credito e Inversiones", "Banco de Chile", "Banco Estado", "Banco Falabella", "Banco Itau (ex BankBoston)", "Banco Santander", "Banco ScotiaBank SudAmer", "Banco Security", "BCI", "CorpBanca", "Itau", "Scotiabank", "Security", "Ripley", "Coopeuch"];const STORAGE='lectorZzyPro1';const THRESH=70;
 let records=[];let editingIndex=null;const $=id=>document.getElementById(id);
 function initRecord(){const r={};COLS.forEach(c=>r[c]='');r._conf={};r._pdfData='';r._pdfName='';return r}
 function esc(s){return(s||'').toString().replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
 function save(){localStorage.setItem(STORAGE,JSON.stringify(records));render()}
 function load(){try{records=JSON.parse(localStorage.getItem(STORAGE)||'[]')||[]}catch(e){records=[]}}
-function getCfg(){try{return JSON.parse(localStorage.getItem(CFG)||'{}')}catch(e){return {}}}
-function thr(){let c=getCfg();return c.thr!=null?Number(c.thr):70}
 function confVal(r,c){if(c==='Archivo Origen')return r[c]?100:0;return r._conf&&r._conf[c]!=null?Number(r._conf[c]):(r[c]?90:0)}
-function cc(n){return n>=90?'high':n>=thr()?'med':'low'}
+function cc(n){return n>=90?'high':n>=THRESH?'med':'low'}
 function badge(n){return '<span class="badge '+cc(n)+'">'+n+'%</span>'}
 function avg(r){let ks=['Rut Titular','Nombres','Email','Banco','Numero Cuenta','Poliza'];let v=ks.map(k=>confVal(r,k));return Math.round(v.reduce((a,b)=>a+b,0)/v.length)}
-function lowFields(r){return COLS.filter(c=>c!=='Archivo Origen'&&confVal(r,c)<thr())}
+function lowFields(r){return COLS.filter(c=>c!=='Archivo Origen'&&confVal(r,c)<THRESH)}
 function needsFix(r){return lowFields(r).length>0}
-function status(m,bad){$('statusBar').textContent=m||'';$('statusBar').classList.toggle('bad',!!bad);$('statusPill').textContent=bad?'Revisar':'Listo'}
 function fullName(r){return[r.Nombres,r['Apellido Paterno'],r['Apellido Materno']].filter(Boolean).join(' ')||'Sin nombre'}
 function fileOf(r){return r['Archivo Origen']||r._pdfName||''}
-function norm(s){return (s||'').toString().toLowerCase().replace(/\.pdf$/,'').replace(/[^a-z0-9]/g,'')}
+function normk(s){return (s||'').toString().toLowerCase().replace(/\.pdf$/,'').replace(/[^a-z0-9]/g,'')}
+function status(m,bad){$('ocrStatus').textContent=m||'';$('ocrStatus').classList.toggle('bad',!!bad);$('statusPill').textContent=bad?'Revisar':'Listo'}
 function setStats(){stTotal.textContent=records.length;stTit.textContent=new Set(records.map(r=>r['Rut Titular']).filter(Boolean)).size;stRev.textContent=records.filter(needsFix).length;stAvg.textContent=records.length?Math.round(records.map(avg).reduce((a,b)=>a+b,0)/records.length)+'%':'0%'}
-function render(){const q=($('search').value||'').toLowerCase();if(!records.length){baseBox.innerHTML='<div class="empty">Importa el Excel/JSON del agente para comenzar. Luego adjunta los PDF.</div>';setStats();return}
- let html='<table><thead><tr><th>Estado</th><th>Confianza</th><th>Archivo Origen</th><th>PDF</th><th>Campos a ajustar</th><th>Rut</th><th>Nombre</th><th>Tipo</th><th>Banco</th><th>Acciones</th></tr></thead><tbody>';
+function render(){const q=($('search').value||'').toLowerCase();if(!records.length){baseBox.innerHTML='<div class="empty"><div class="big">Aún no hay registros</div>Usa <b>Leer PDF (OCR)</b> para una demo, o <b>Importar del agente</b>.</div>';setStats();return}
+ let html='<table><thead><tr><th>Estado</th><th>Confianza</th><th>Archivo Origen</th><th>PDF</th><th>Ajustes</th><th>Rut</th><th>Nombre</th><th>Tipo</th><th>Banco</th><th></th></tr></thead><tbody>';
  records.forEach((r,i)=>{let t=(COLS.map(c=>r[c]||'').join(' ')+' '+(r._pdfName||'')).toLowerCase();if(q&&t.indexOf(q)<0)return;let cf=avg(r);let nf=lowFields(r).length;
- html+='<tr><td>'+(needsFix(r)?'<span class="badge low">Ajustar</span>':'<span class="badge high">Validado</span>')+'</td><td>'+badge(cf)+'</td><td>'+(fileOf(r)?'<span class="badge file">'+esc(fileOf(r))+'</span>':'<span class="badge low">sin archivo</span>')+'</td><td>'+(r._pdfData?'<span class="badge high">PDF</span>':'<span class="badge low">Sin PDF</span>')+'</td><td>'+(nf?('<span class="badge low">'+nf+' campos</span>'):'<span class="badge high">OK</span>')+'</td><td>'+esc(r['Rut Titular'])+' '+badge(confVal(r,'Rut Titular'))+'</td><td>'+esc(fullName(r))+' '+badge(confVal(r,'Nombres'))+'</td><td>'+esc(r['Tipo Movimiento'])+'</td><td>'+esc(r.Banco)+' '+badge(confVal(r,'Banco'))+'</td><td><button data-open="'+i+'">Revisar</button></td></tr>'});
+ html+='<tr><td>'+(needsFix(r)?'<span class="badge low">Ajustar</span>':'<span class="badge high">Validado</span>')+'</td><td>'+badge(cf)+'</td><td>'+(fileOf(r)?'<span class="badge file">'+esc(fileOf(r))+'</span>':'<span class="badge low">sin archivo</span>')+'</td><td>'+(r._pdfData?'<span class="badge high">PDF</span>':'<span class="badge low">—</span>')+'</td><td>'+(nf?('<span class="badge low">'+nf+'</span>'):'<span class="badge high">OK</span>')+'</td><td>'+esc(r['Rut Titular'])+' '+badge(confVal(r,'Rut Titular'))+'</td><td>'+esc(fullName(r))+' '+badge(confVal(r,'Nombres'))+'</td><td>'+esc(r['Tipo Movimiento'])+'</td><td>'+esc(r.Banco)+' '+badge(confVal(r,'Banco'))+'</td><td><button data-open="'+i+'">Revisar</button></td></tr>'});
  baseBox.innerHTML=html+'</tbody></table>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openReview(Number(b.dataset.open)));setStats()}
-function openReview(i){editingIndex=i;let r=records[i];$('revFile').textContent=fileOf(r)||'-';reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let low=c!=='Archivo Origen'&&confVal(r,c)<thr();if(low)d.classList.add('needfix');let ctl=(c==='Banco')?('<select name="'+c+'">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'"><option></option><option>CUENTA VISTA</option><option>CUENTA CORRIENTE</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+(c!=='Archivo Origen'?(' '+badge(confVal(r,c))+(low?' <span style="color:#b42318">&#9679; revisar</span>':'')):'')+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});
- if(r._pdfData){pdfFrame.src=r._pdfData;pdfFrame.classList.remove('hidden');$('noPdf').classList.add('hidden');$('pdfName').textContent=r._pdfName||fileOf(r)||'Previsualizacion'}else{pdfFrame.src='about:blank';pdfFrame.classList.add('hidden');$('noPdf').classList.remove('hidden');$('pdfName').textContent='Sin PDF adjunto'}
+function openReview(i){editingIndex=i;let r=records[i];$('revFile').textContent=fileOf(r)||'-';reviewFields.innerHTML='';COLS.forEach(c=>{let d=document.createElement('div');d.className='field';let low=c!=='Archivo Origen'&&confVal(r,c)<THRESH;if(low)d.classList.add('needfix');let ctl=(c==='Banco')?('<select name="'+c+'">'+BANCOS.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select>'):(c==='Tipo Cuenta')?('<select name="'+c+'"><option></option><option>CUENTA VISTA</option><option>CUENTA CORRIENTE</option></select>'):(c==='Tipo Movimiento')?('<select name="'+c+'"><option></option><option>T</option><option>T+C</option><option>C</option></select>'):'<input name="'+c+'">';d.innerHTML='<label>'+c+(c!=='Archivo Origen'?(' '+badge(confVal(r,c))):'')+'</label>'+ctl;reviewFields.appendChild(d);let el=d.querySelector('[name]');if(el)el.value=r[c]||''});
+ if(r._pdfData){pdfFrame.src=r._pdfData;pdfFrame.classList.remove('hidden');$('noPdf').classList.add('hidden');$('pdfName').textContent=r._pdfName||fileOf(r)||'PDF'}else{pdfFrame.src='about:blank';pdfFrame.classList.add('hidden');$('noPdf').classList.remove('hidden');$('pdfName').textContent='Sin PDF'}
  reviewModal.classList.remove('hidden')}
 closeReview.onclick=()=>reviewModal.classList.add('hidden');
 deleteReview.onclick=()=>{if(editingIndex!=null){records.splice(editingIndex,1);save();reviewModal.classList.add('hidden')}};
 reviewForm.onsubmit=e=>{e.preventDefault();let r=records[editingIndex];COLS.forEach(c=>{let el=reviewForm.elements[c];if(el){r[c]=el.value;if(r[c]&&c!=='Archivo Origen')r._conf[c]=100}});save();reviewModal.classList.add('hidden')};
-function loadScript(src,ok,fail){if([...document.scripts].some(s=>s.src===src))return ok();let s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail||(()=>alert('No se pudo cargar libreria externa.'));document.head.appendChild(s)}
+// nav
+function switchView(v){document.querySelectorAll('.navitem').forEach(x=>x.classList.toggle('on',x.dataset.view===v));viewBase.classList.toggle('hidden',v!=='base');viewOCR.classList.toggle('hidden',v!=='ocr');viewConfig.classList.toggle('hidden',v!=='config');let map={base:['Base de datos','Titulares y cargas con nivel de confianza por campo.'],ocr:['Lectura OCR (demo)','Lee PDF en el navegador y crea registros con % de confianza.'],config:['Cómo funciona','Arquitectura de lectura asistida con control humano.']};$('viewTitle').textContent=map[v][0];$('viewSub').textContent=map[v][1]}
+document.querySelectorAll('.navitem[data-view]').forEach(n=>n.onclick=()=>switchView(n.dataset.view));
+$('btnOCR').onclick=()=>{switchView('ocr');pdfInputOCR.click()};
+// libs
+function loadScript(src,ok,fail){if([...document.scripts].some(s=>s.src===src))return ok();let s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail||(()=>alert('No se pudo cargar '+src));document.head.appendChild(s)}
 function ensureX(cb){window.XLSX?cb():loadScript('https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',cb,()=>alert('No se pudo cargar SheetJS'))}
-function mapObj(o){let r=initRecord();COLS.forEach(c=>{let k=Object.keys(o).find(x=>x.trim().toLowerCase()===c.toLowerCase());r[c]=k?(o[k]||'').toString():''});if(o._conf)r._conf=o._conf;else COLS.forEach(c=>{if(r[c]&&c!=='Archivo Origen')r._conf[c]=95});
- let pn=r['Archivo Origen']||o._pdf||o._pdfName||o.archivo_pdf||'';if(pn){r._pdfName=pn.toString();if(!r['Archivo Origen'])r['Archivo Origen']=pn.toString()}return r}
+function ensurePDF(cb){window.pdfjsLib?cb():loadScript('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',()=>{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';cb()},()=>status('No se pudo cargar PDF.js (sin internet).',true))}
+function ensureTess(cb){window.Tesseract?cb():loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',cb,()=>cb())}
 function toDataURL(file){return new Promise((res,rej)=>{let fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file)})}
-btnImport.onclick=()=>{fileInput.click()};
+function u(s){return (s||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/Ñ/g,'N').replace(/ñ/g,'n').toUpperCase().trim()}
+function rutClean(s){return (s||'').toString().replace(/[^0-9kK]/g,'').toUpperCase()}
+function setC(r,k,v,p){if(v){r[k]=v;r._conf[k]=p}}
+function parseText(txt,fname){let r=initRecord();r['Archivo Origen']=fname;r._pdfName=fname;txt=txt||'';
+ r['Numero Grupo']='1';r.Capital='0';r.Renta='0';r.Peso='1';r.Estatura='1';r['Pre exisstencia']='No';r.Sucursal='Sin info';r.Area='Sin info';r.Cargo='Sin info';r.Poliza='POR CONFIRMAR';r['Fecha Inicio']='POR CONFIRMAR';r['Fecha Inicio Vigencia Carga']='POR CONFIRMAR';r.DB='NO';r['Fecha Solicitud']=new Date().toLocaleDateString('es-CL').replace(/\//g,'-');
+ let m=txt.match(/\b(\d{1,2}\.?\d{3}\.?\d{3})[-\s]?([0-9kK])\b/);if(m){setC(r,'Rut Titular',rutClean(m[1]+m[2]),62)}
+ let em=(txt.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)||[''])[0];if(em)setC(r,'Email',em.toUpperCase(),60);
+ let ph=(txt.match(/\+?56\s?9\s?\d{4}\s?\d{4}/)||[''])[0];if(ph)setC(r,'Telefono',ph.replace(/[^0-9]/g,'').replace(/^56/,''),58);
+ let dt=(txt.match(/\b\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4}\b/)||[''])[0];if(dt)setC(r,'Fecha Nacimiento',dt.replace(/\//g,'-'),55);
+ let up=u(txt);let bk=['BANCO ESTADO','BANCO DE CHILE','BANCO SANTANDER','BANCO FALABELLA','BANCO BICE','SCOTIABANK','BCI','BANCO SECURITY'];
+ let disp={'BANCO ESTADO':'Banco Estado','BANCO DE CHILE':'Banco de Chile','BANCO SANTANDER':'Banco Santander','BANCO FALABELLA':'Banco Falabella','BANCO BICE':'Banco BICE','SCOTIABANK':'Scotiabank','BCI':'BCI','BANCO SECURITY':'Banco Security'};
+ for(let b of bk){if(up.includes(b)){setC(r,'Banco',disp[b],72);break}}
+ r['Tipo Movimiento']='T';r._conf['Tipo Movimiento']=60;
+ return r}
+async function ocrPDF(file){let fname=file.name;status('Procesando '+fname+'…');$('ocrbar').classList.add('on');$('ocrfill').style.width='8%';
+ let dataUrl=await toDataURL(file);
+ return await new Promise(resolve=>{ensurePDF(async()=>{try{
+   let pdf=await pdfjsLib.getDocument({data:atob(dataUrl.split(',')[1])&&Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0))}).promise;
+   let text='';for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let tc=await page.getTextContent();text+=tc.items.map(i=>i.str).join(' ')+' ';$('ocrfill').style.width=(10+p/pdf.numPages*30)+'%'}
+   if(text.replace(/\s/g,'').length>40){let r=parseText(text,fname);r._pdfData=dataUrl;$('ocrfill').style.width='100%';resolve(r);return}
+   // sin capa de texto -> OCR imagen pag 1
+   status('PDF escaneado: aplicando OCR (puede tardar)…');ensureTess(async()=>{try{
+     let page=await pdf.getPage(1);let vp=page.getViewport({scale:2});let cv=document.createElement('canvas');cv.width=vp.width;cv.height=vp.height;await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;$('ocrfill').style.width='60%';
+     let out=await Tesseract.recognize(cv,'spa',{logger:m=>{if(m.progress)$('ocrfill').style.width=(60+m.progress*38)+'%'}});
+     let r=parseText(out&&out.data?out.data.text:'',fname);r._pdfData=dataUrl;$('ocrfill').style.width='100%';resolve(r)
+   }catch(e){let r=parseText('',fname);r._pdfData=dataUrl;resolve(r)}})
+ }catch(e){let r=parseText('',fname);r._pdfData=dataUrl;resolve(r)}})})}
+async function handleOCR(files){let arr=[...files].filter(f=>/pdf$/i.test(f.name));let n=0;for(let f of arr){let r=await ocrPDF(f);records.push(r);n++;save()}$('ocrbar').classList.remove('on');status('Listo: '+n+' PDF procesados. Revisa los campos bajo '+THRESH+'% en la Base.');switchView('base')}
+$('dropzone').onclick=e=>{if(e.target.id!=='pdfInputOCR')pdfInputOCR.click()};
+['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('over')}));
+dropzone.addEventListener('drop',e=>handleOCR(e.dataTransfer.files));pdfInputOCR.onchange=e=>handleOCR(e.target.files);
+// importar agente
+function mapObj(o){let r=initRecord();COLS.forEach(c=>{let k=Object.keys(o).find(x=>x.trim().toLowerCase()===c.toLowerCase());r[c]=k?(o[k]||'').toString():''});if(o._conf)r._conf=o._conf;else COLS.forEach(c=>{if(r[c]&&c!=='Archivo Origen')r._conf[c]=95});let pn=r['Archivo Origen']||o._pdf||o.archivo_pdf||'';if(pn){r._pdfName=pn.toString();if(!r['Archivo Origen'])r['Archivo Origen']=pn.toString()}return r}
+$('btnImport').onclick=()=>fileInput.click();
 fileInput.onchange=e=>{let f=e.target.files[0];if(!f)return;let before=records.length;
- if(f.name.toLowerCase().endsWith('.json')){f.text().then(t=>{let j=JSON.parse(t);let arr=Array.isArray(j)?j:(j.registros||[]);let pdfName=j.archivo_pdf||'';arr.forEach(o=>{let r=mapObj(o);if(!r['Archivo Origen']&&pdfName){r['Archivo Origen']=pdfName;r._pdfName=pdfName}records.push(r)});save();status('Importados '+(records.length-before)+' registros. Ahora pulsa "2. Adjuntar PDF".')})}
- else{ensureX(async()=>{let wb=XLSX.read(await f.arrayBuffer());let arr=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});arr.forEach(o=>records.push(mapObj(o)));save();status('Importados '+(records.length-before)+' registros. Ahora pulsa "2. Adjuntar PDF".')})}
+ if(f.name.toLowerCase().endsWith('.json')){f.text().then(t=>{let j=JSON.parse(t);let a=Array.isArray(j)?j:(j.registros||[]);let pn=j.archivo_pdf||'';a.forEach(o=>{let r=mapObj(o);if(!r['Archivo Origen']&&pn){r['Archivo Origen']=pn;r._pdfName=pn}records.push(r)});save();status('Importados '+(records.length-before)+' registros del agente.')})}
+ else{ensureX(async()=>{let wb=XLSX.read(await f.arrayBuffer());let a=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});a.forEach(o=>records.push(mapObj(o)));save();status('Importados '+(records.length-before)+' registros del agente.')})}
  fileInput.value=''};
-btnAttach.onclick=()=>{pdfInput.click()};
-pdfInput.onchange=async e=>{let files=[...e.target.files];let matched=0,added=0;
- for(let f of files){let data=await toDataURL(f);let key=norm(f.name);
-   let rs=records.filter(r=>norm(fileOf(r))===key || norm(fileOf(r))===norm(f.name));
-   if(rs.length){rs.forEach(r=>{r._pdfData=data;r._pdfName=f.name;matched++})}
-   else{let rs2=records.filter(r=>(norm(r['Rut Titular']).length>5&&key.includes(norm(r['Rut Titular'])))||(r.Nombres&&key.includes(norm(r.Nombres))));
-     if(rs2.length){rs2.forEach(r=>{r._pdfData=data;r._pdfName=f.name;if(!r['Archivo Origen'])r['Archivo Origen']=f.name;matched++})}
-     else{let r=initRecord();r['Archivo Origen']=f.name;r._pdfName=f.name;r._pdfData=data;records.push(r);added++}}}
- save();status('PDF adjuntados: '+matched+' unidos por archivo'+(added?(', '+added+' nuevos pendientes'):'')+'.')};
-btnAdd.onclick=()=>{records.push(initRecord());save();openReview(records.length-1)};
-btnXlsx.onclick=()=>ensureX(()=>{let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records.map(r=>{let o={};COLS.forEach(c=>o[c]=r[c]||'');o['Fiabilidad %']=avg(r);return o}),{header:COLS.concat(['Fiabilidad %'])}),'Altas');XLSX.writeFile(wb,'remesa_altas_brosys.xlsx')});
-btnCsv.onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(';')));let b=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='remesa_altas_brosys.csv';a.click()};
-btnClear.onclick=()=>{if(confirm('Limpiar base local?')){records=[];save()}};
-search.oninput=render;
-document.querySelectorAll('.nav[data-view]').forEach(n=>n.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));n.classList.add('on');let v=n.dataset.view;viewBase.classList.toggle('hidden',v!=='base');viewConfig.classList.toggle('hidden',v!=='config')});
+// adjuntar pdf
+$('btnAttach').onclick=()=>pdfInputAttach.click();
+pdfInputAttach.onchange=async e=>{let files=[...e.target.files];let matched=0;for(let f of files){let data=await toDataURL(f);let key=normk(f.name);let rs=records.filter(r=>normk(fileOf(r))===key);if(rs.length)rs.forEach(r=>{r._pdfData=data;r._pdfName=f.name;matched++});else{let r=initRecord();r['Archivo Origen']=f.name;r._pdfName=f.name;r._pdfData=data;records.push(r)}}save();status('PDF adjuntados: '+matched+' unidos por archivo.')};
+$('btnAdd').onclick=()=>{records.push(initRecord());save();openReview(records.length-1)};
+$('btnXlsx').onclick=()=>ensureX(()=>{let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(records.map(r=>{let o={};COLS.forEach(c=>o[c]=r[c]||'');o['Fiabilidad %']=avg(r);return o}),{header:COLS.concat(['Fiabilidad %'])}),'Altas');XLSX.writeFile(wb,'Base_Altas_Brosys.xlsx')});
+$('btnCsv').onclick=()=>{let lines=[COLS.join(';')].concat(records.map(r=>COLS.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(';')));let b=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Base_Altas_Brosys.csv';a.click()};
+$('btnClear').onclick=()=>{if(confirm('¿Limpiar la base local?')){records=[];save()}};
+$('search').oninput=render;
 load();render();
 </script></body></html>
